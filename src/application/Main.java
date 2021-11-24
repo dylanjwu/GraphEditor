@@ -1,30 +1,26 @@
 package application;
-	
+
 import java.awt.TextField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import application.controller.MainController;
+import application.model.DefaultGraph;
+import application.model.Graph;
+import application.view.GraphEditorView;
+import application.view.GraphEditorViewImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.event.EventHandler;
-
-class Edge extends Line {
-	public Edge(double x1, double y1, double x2, double y2) {
-		super(x1, y1, x2, y2);
-	}
-	
-}
-
-enum Modes {
-	ADD, DELETE, MOVE;
-}
 
 /**
  * 
@@ -98,49 +94,35 @@ enum Modes {
 
 public class Main extends Application {
 	
-	private Modes currentMode = Modes.ADD;
-	
-	Map<GraphNode,  Vertex> nodeMap; 
-	
-
-	private double nodeRadius = 15;
 	
 	@Override
 	public void start(Stage primaryStage) {
-
-		nodeMap = new HashMap<>();
+		Graph model = new DefaultGraph();
+		GraphEditorView view = new GraphEditorViewImpl(model);
+		((Pane) view).prefHeight(300);
+		((Pane) view).prefWidth(300);
+		((Pane) view).getChildren().add(new Circle(30,30,13));
+		new MainController(view, model);
 		
-		Group root = new Group();
-
-		Scene scene = new Scene(root, 400, 400);
-
-		GraphNode.setRoot(root);
-
-//		scene.setOnZoomStarted(evt -> System.out.println("ZOOM STARTED"));
-//		scene.setOnZoom(evt -> {
-//			System.out.println("ZOOMING");
-//			double zoomFactor = 1.2;
-//			root.setScaleX(root.getScaleX() * zoomFactor);
-//            root.setScaleY(root.getScaleY() * zoomFactor);
-//		});
-//		
-//		scene.setOnZoomFinished(evt -> System.out.println("ZOOM FINISHED"));
-
-		scene.addEventHandler(MouseEvent.MOUSE_PRESSED, 
-				new EventHandler<MouseEvent>(){
-			
-					@Override
-					public void handle(MouseEvent event) {
-						GraphNode graphNode = new GraphNode(event.getX(), event.getY(), nodeRadius);
-						nodeMap.put(graphNode, new Vertex());
-						root.getChildren().add(graphNode);
-					}
-		});
-		
+		Scene scene = new Scene((Pane)view, 400, 400);
 
 		primaryStage.setTitle("Graph Editor");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+////		scene.setOnZoomStarted(evt -> System.out.println("ZOOM STARTED"));
+////		scene.setOnZoom(evt -> {
+////			System.out.println("ZOOMING");
+////			double zoomFactor = 1.2;
+////			root.setScaleX(root.getScaleX() * zoomFactor);
+////            root.setScaleY(root.getScaleY() * zoomFactor);
+////		});
+////		
+////		scene.setOnZoomFinished(evt -> System.out.println("ZOOM FINISHED"));
+//
+	
+//		
+//
 	}
 
 	public static void main(String[] args) {
