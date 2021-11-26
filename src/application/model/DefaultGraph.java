@@ -20,7 +20,7 @@ public class DefaultGraph implements Graph {
 	@Override
 	public void removeVertex(Vertex v) {
 		for (Vertex u : adjList) {
-			u.getInEdges().removeIf(edge -> edge.getDst().equals(v));
+			u.removeEdge(v);
 		}
 		adjList.remove(v);
 		System.out.println("Vertex " + v + " deleted from graph");
@@ -33,13 +33,24 @@ public class DefaultGraph implements Graph {
 
 	@Override
 	public void addEdge(Vertex u, Vertex v) {
-		u.addOutEdge(new DefaultEdge(u, v));
+		if (!u.hasEdge(v)) {
+			u.addEdge(v);
+		}
 	}
 
 	@Override
 	public List<Vertex> getVertices() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public void removeEdge(Vertex u, Vertex v) {
+		u.removeEdge(v);
+	}
+
+	@Override
+	public String toString() {
+		return "DefaultGraph [adjList=" + adjList + "]";
+	}
+
 }

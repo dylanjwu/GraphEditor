@@ -1,6 +1,9 @@
 package application.controller;
 
+import java.util.Map;
+
 import application.model.Graph;
+import application.model.Vertex;
 import application.view.GraphEditorView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -16,9 +19,11 @@ public class AddController implements ModeController {
 
 	private GraphEditorView view;
 	private Graph model;
-	public AddController(GraphEditorView view, Graph model) {
+	private Map<Circle, Vertex> nodeMap;
+	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Graph model) {
 		this.model = model;
 		this.view = view;
+		this.nodeMap = nodeMap;
 		view.setModeController(this);
 	}
 	
@@ -30,6 +35,14 @@ public class AddController implements ModeController {
 	
 	@Override
 	public void addNodeDragHandler(Circle node) {  
+		//add node to new vertex in nodeMap and model (model)
+		Vertex newVertex = new Vertex();
+		model.addVertex(newVertex);
+		nodeMap.put(node, newVertex);
+
+		System.out.println(model);
+		System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
+
 		node.setOnMousePressed(e -> e.consume());
 		node.setOnDragDropped(
 			new EventHandler<DragEvent>() {
@@ -40,7 +53,16 @@ public class AddController implements ModeController {
 						event.setDropCompleted(true);
 
 						if (view.getCurrentSourceNode() != null) {
-							view.addEdge((Circle)view.getCurrentSourceNode(), (Circle)event.getSource());
+							Circle source = (Circle)view.getCurrentSourceNode();
+							Circle dest = (Circle)event.getSource();
+							
+							// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
+							model.addEdge(nodeMap.get(source), nodeMap.get(dest));
+							System.out.println(model);
+							System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
+//							nodeMap.get(source).addEdge(nodeMap.get(dest));
+
+							view.addEdge(source, dest);
 						}
 						event.consume();
 					}
@@ -84,7 +106,6 @@ public class AddController implements ModeController {
 	@Override
 	public void onClickCanvas() {
 		view.addNode(0, 0);
-		
 	}
 
 	@Override

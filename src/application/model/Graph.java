@@ -11,12 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
 
-
 public interface Graph {
 	void addVertex(Vertex v);
 	void removeVertex(Vertex v);
 	void clear();
 	void addEdge(Vertex u, Vertex v);
+	void removeEdge(Vertex u, Vertex v);
 	List<Vertex> getVertices();
 }
 

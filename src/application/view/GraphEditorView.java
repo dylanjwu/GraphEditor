@@ -1,13 +1,15 @@
 package application.view;
 
 import application.controller.ModeController;
+import javafx.scene.Node;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
 public interface GraphEditorView {
 
-	void removeGroup();
+	void removeGroup(Node node);
 
-	void removeEdge();
+	void removeEdge(Line edge);
 
 	void moveGroup();
 

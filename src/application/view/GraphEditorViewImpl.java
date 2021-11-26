@@ -49,15 +49,13 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	}
 
 	@Override
-	public void removeGroup() {
-		// TODO Auto-generated method stub
-		
+	public void removeGroup(Node node) {
+		this.getChildren().remove(node);
 	}
 
 	@Override
-	public void removeEdge() {
-		// TODO Auto-generated method stub
-		
+	public void removeEdge(Line edge) {
+		this.getChildren().remove(edge);
 	}
 
 	@Override
@@ -124,6 +122,14 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	@Override
 	public void addEdge(Circle src, Circle dst) {
 		Line edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
+		
+		//connect the edge to the src and dst nodes so that when one of them moves, the edge moves accordingly
+		edge.startXProperty().bind(src.centerXProperty());
+		edge.startYProperty().bind(src.centerYProperty());
+
+		edge.startXProperty().bind(dst.centerXProperty());
+		edge.startYProperty().bind(dst.centerYProperty());
+
 		this.getChildren().add(edge);
 	}
 	
