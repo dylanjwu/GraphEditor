@@ -74,8 +74,15 @@ public class DeleteController implements ModeController {
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				model.removeVertex(nodeMap.get(node));
+				model.removeVertex(nodeMap.get(event.getSource()));
 				//TODO delete all edges connected to node
+				for (Line edge : edgeMap.keySet()) {
+					Circle sourceNode = edgeMap.get(edge).getKey();
+					Circle destNode = edgeMap.get(edge).getValue();
+					if (sourceNode.equals(event.getSource()) || destNode.equals(event.getSource())){
+						view.removeEdge(edge);
+					}
+				}
 
 				nodeMap.remove(node);
 				view.removeGroup(node);

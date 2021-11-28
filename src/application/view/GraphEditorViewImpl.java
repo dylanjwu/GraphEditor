@@ -136,7 +136,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 		edge.endXProperty().bind(dst.centerXProperty());
 		edge.endYProperty().bind(dst.centerYProperty());
 
-	    edge.setStrokeWidth(1);
+	    edge.setStrokeWidth(3);
 //	    edge.setStrokeLineCap(StrokeLineCap.BUTT);
 //	    edge.getStrokeDashArray().setAll(1.0, 4.0);
 	    edge.setStroke(Color.BLACK);
