@@ -6,16 +6,6 @@ import javafx.scene.shape.Line;
 
 public interface ModeController {
 
-	void onClickEdge();
-
-	void onClickGroup();
-
-	void onClickCanvas();
-
-	void onDragCanvas();
-
-	void onDragGroup();
-
 	void addNodeDragHandler(Circle node);
 
 	void addCanvasPressHandler(Node node);

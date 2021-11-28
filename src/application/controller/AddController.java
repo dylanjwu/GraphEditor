@@ -101,34 +101,4 @@ public class AddController implements ModeController {
 		edgeMap.put(edge, new Pair<>(source, dest));
 	}
 
-	@Override
-	public void onClickGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	// TODO make an event handler, so that we can add a new node to the view, and to the model as well
-	@Override
-	public void onClickCanvas() {
-		view.addNode(0, 0);
-	}
-
-	@Override
-	public void onDragCanvas() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDragGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onClickEdge() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -37,37 +37,6 @@ public class DeleteController implements ModeController {
 		}
 	}
 	
-
-	@Override
-	public void onClickEdge() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onClickGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onClickCanvas() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDragCanvas() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDragGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void addNodeDragHandler(Circle node) {
 
