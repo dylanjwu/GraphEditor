@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import application.controller.Controller;
 import application.controller.MainController;
 import application.model.DefaultGraph;
 import application.model.Graph;
@@ -16,11 +17,19 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 
 /**
  * 
@@ -100,10 +109,27 @@ public class Main extends Application {
 		Graph model = new DefaultGraph();
 		GraphEditorView view = new GraphEditorViewImpl(model);
 
-		new MainController(view, model);
+		Controller controller = new MainController(view, model);
 		
-		Scene scene = new Scene((Pane)view, 400, 400);
+		MenuBar menu = new MenuBar();
+		menu.setPrefSize(600, 29);
+		menu.setLayoutX(-2);
+		menu.setLayoutY(1);
 
+		VBox controls = new VBox();
+		controls.setPrefSize(129, 352);
+		controls.setPadding(new Insets(10,10,10,10));
+		controls.setSpacing(15);
+
+		controls.getChildren().add(new ToggleButton("Undirected"));
+		controls.getChildren().add(new ToggleButton("Weighted"));
+		controls.getChildren().add(new ToggleButton("Add/Delete"));
+		
+		
+		StackPane stackpane = new StackPane();
+		Scene scene = new Scene(stackpane, 400, 400);
+		stackpane.getChildren().addAll(controls, (Pane)view);
+		scene.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.D) controller.changeMode("delete"); });
 		primaryStage.setTitle("Graph Editor");
 		primaryStage.setScene(scene);
 		primaryStage.show();

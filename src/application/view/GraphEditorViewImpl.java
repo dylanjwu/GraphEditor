@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
 public class GraphEditorViewImpl extends Pane implements GraphEditorView {
@@ -26,8 +27,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	private ModeController modeController;
 
 	public GraphEditorViewImpl(Graph model) {
-		this.prefHeight(300);
-		this.prefWidth(300);
+		this.setPrefSize(450, 352);
 		this.model = model;
 		this.modeController = null;
 	}
@@ -104,7 +104,9 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		for (Node child : getChildren()) {
+			System.out.println(child);
+		}
 	}
 	
 	
@@ -122,15 +124,26 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	@Override
 	public void addEdge(Circle src, Circle dst) {
 		Line edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
-		
+		System.out.println(edge);
+		modeController.addEdgeEventHandler(edge, src, dst);
 		//connect the edge to the src and dst nodes so that when one of them moves, the edge moves accordingly
+		System.out.println("src x: " + src.centerXProperty());
+
+		System.out.println("dst x: " + dst.centerXProperty());
+
 		edge.startXProperty().bind(src.centerXProperty());
 		edge.startYProperty().bind(src.centerYProperty());
+		edge.endXProperty().bind(dst.centerXProperty());
+		edge.endYProperty().bind(dst.centerYProperty());
 
-		edge.startXProperty().bind(dst.centerXProperty());
-		edge.startYProperty().bind(dst.centerYProperty());
-
+	    edge.setStrokeWidth(1);
+//	    edge.setStrokeLineCap(StrokeLineCap.BUTT);
+//	    edge.getStrokeDashArray().setAll(1.0, 4.0);
+	    edge.setStroke(Color.BLACK);
+	    edge.setVisible(true);
+	    
 		this.getChildren().add(edge);
+		clear();
 	}
 	
 }

@@ -13,6 +13,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.util.Pair;
 
 
 public class AddController implements ModeController {
@@ -20,10 +22,12 @@ public class AddController implements ModeController {
 	private GraphEditorView view;
 	private Graph model;
 	private Map<Circle, Vertex> nodeMap;
-	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Graph model) {
+	private Map<Line, Pair<Circle, Circle>> edgeMap;
+	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
 		this.nodeMap = nodeMap;
+		this.edgeMap = edgeMap;
 		view.setModeController(this);
 	}
 	
@@ -58,6 +62,7 @@ public class AddController implements ModeController {
 							
 							// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
 							model.addEdge(nodeMap.get(source), nodeMap.get(dest));
+
 							System.out.println(model);
 							System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
 //							nodeMap.get(source).addEdge(nodeMap.get(dest));
@@ -92,8 +97,8 @@ public class AddController implements ModeController {
 	
 
 	@Override
-	public void onClickEdge() {
-		// TODO Auto-generated method stub
+	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
+		edgeMap.put(edge, new Pair<>(source, dest));
 	}
 
 	@Override
@@ -116,6 +121,12 @@ public class AddController implements ModeController {
 
 	@Override
 	public void onDragGroup() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClickEdge() {
 		// TODO Auto-generated method stub
 		
 	}

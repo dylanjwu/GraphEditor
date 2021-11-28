@@ -1,9 +1,12 @@
 package application.playground;
 
+import java.awt.Panel;
+
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -51,15 +54,16 @@ public class Main2 extends Application {
     line.endYProperty().bind(c2.centerYProperty());
 
     line.setStrokeWidth(1);
-    line.setStrokeLineCap(StrokeLineCap.BUTT);
-    line.getStrokeDashArray().setAll(1.0, 4.0);
+    line.setStroke(Color.BLACK);
+//    line.setStrokeLineCap(StrokeLineCap.BUTT);
+//    line.getStrokeDashArray().setAll(1.0, 4.0);
 
     return line;
   }
 
   @Override
   public void start(Stage primaryStage) {
-    Group root = new Group();
+    Pane root = new Pane();
     Scene scene = new Scene(root, 500, 260);
 
     // circles
