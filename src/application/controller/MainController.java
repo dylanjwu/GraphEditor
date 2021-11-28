@@ -49,7 +49,7 @@ public class MainController implements Controller {
 			this.currentMode = new AddController(view, nodeMap, edgeMap, model); 
 		}
 		else if (mode.equals("move")) {
-			this.currentMode = new MoveController(); 
+			this.currentMode = new MoveController(view, nodeMap, edgeMap, model); 
 		}
 		else {
 			System.out.println("Invalid mode");

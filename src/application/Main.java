@@ -129,7 +129,7 @@ public class Main extends Application {
 		StackPane stackpane = new StackPane();
 		Scene scene = new Scene(stackpane, 400, 400);
 		stackpane.getChildren().addAll(controls, (Pane)view);
-		scene.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.D) controller.changeMode("delete"); });
+		scene.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.D) controller.changeMode("move"); });
 		primaryStage.setTitle("Graph Editor");
 		primaryStage.setScene(scene);
 		primaryStage.show();
