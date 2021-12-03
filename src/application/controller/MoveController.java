@@ -65,6 +65,8 @@ public class MoveController implements ModeController {
 		// TODO create selection rectangle when dragged
 
 		node.setOnMousePressed(null);
+		
+		node.setOnDragDetected(null);
 	}
 
 	@Override

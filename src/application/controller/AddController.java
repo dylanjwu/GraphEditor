@@ -68,15 +68,14 @@ public class AddController implements ModeController {
 						if (view.getCurrentSourceNode() != null) {
 							Circle source = (Circle)view.getCurrentSourceNode();
 							Circle dest = (Circle)event.getSource();
-							
-							// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
-							model.addEdge(nodeMap.get(source), nodeMap.get(dest));
 
-							System.out.println(model);
-							System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
-//							nodeMap.get(source).addEdge(nodeMap.get(dest));
+							if (!edgeExists(source, dest)) {
+						
+								System.out.println(model);
+								System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
 
-							view.addEdge(source, dest);
+								view.addEdge(source, dest);
+							}
 						}
 						event.consume();
 					}
@@ -104,10 +103,7 @@ public class AddController implements ModeController {
         });
 	}
 	
-
-	@Override
-	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
-
+	private boolean edgeExists(Circle source, Circle dest) {
 		boolean exists = false;
 		
 		for (Pair<Circle, Circle> pair : edgeMap.values()) {
@@ -115,8 +111,17 @@ public class AddController implements ModeController {
 				exists = true;
 			}
 		}
-		if (!exists)
+		return exists;
+	}
+
+	@Override
+	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
+
+		if (!edgeExists(source, dest)) {
+			// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
+			model.addEdge(nodeMap.get(source), nodeMap.get(dest));
 			edgeMap.put(edge, new Pair<>(source, dest));
+		}
 			
 		System.out.println("EDGE MAP in add edge handler: " + edgeMap.values());
 	}
