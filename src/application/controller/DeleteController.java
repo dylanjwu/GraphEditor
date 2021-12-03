@@ -39,10 +39,15 @@ public class DeleteController implements ModeController {
 	
 	@Override
 	public void addNodeDragHandler(Circle node) {
+		node.setOnMouseDragged(null);
+		node.setOnDragOver(null);
+		node.setOnDragDropped(null);
+		node.setOnDragDetected(null);
 
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				System.out.println("Delete mouse pressed");
 				model.removeVertex(nodeMap.get(event.getSource()));
 				//TODO delete all edges connected to node
 				for (Line edge : edgeMap.keySet()) {
@@ -72,9 +77,10 @@ public class DeleteController implements ModeController {
 		edge.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				System.out.println("edge: " + edgeMap.get(event.getSource()));
 				model.removeEdge(nodeMap.get(edgeMap.get(event.getSource()).getKey()), 
 						nodeMap.get(edgeMap.get(event.getSource()).getValue()));
+
+				System.out.println("REMOVED EDGE: " + edgeMap);
 				edgeMap.remove((Line)event.getSource());
 				view.removeEdge((Line) event.getSource());
 			}

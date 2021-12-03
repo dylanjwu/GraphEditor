@@ -6,6 +6,7 @@ import java.util.List;
 import application.controller.ModeController;
 import application.model.Graph;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.ClipboardContent;
@@ -13,6 +14,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -25,9 +30,21 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	private Graph model; // use this to iterate through the nodes and edges
 	private Circle currentSourceNode;
 	private ModeController modeController;
+	private static final int DIMENSION = 550;
 
 	public GraphEditorViewImpl(Graph model) {
-		this.setPrefSize(450, 352);
+		this.setMaxHeight(DIMENSION);
+		this.setMaxWidth(DIMENSION);
+
+		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, 
+        CornerRadii.EMPTY, Insets.EMPTY);
+		Background background = new Background(background_fill);
+		this.setBackground(background);
+
+
+		this.setLayoutX(50);
+		this.setLayoutY(50);
+		this.setBorder(Border.EMPTY);
 		this.model = model;
 		this.modeController = null;
 	}
@@ -114,10 +131,16 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	public void addNode(double x, double y) {
 		if (modeController == null) return;
 		Circle newNode = new Circle(x, y, NODE_RADIUS);
-		// register this node with the controller, add handler
 		modeController.addNodeDragHandler(newNode);
 		newNode.setStroke(Color.BLACK);
 		newNode.setFill(Color.TRANSPARENT);
+
+		// register this node with the controller, add handler
+//		StackPane stackPane = new StackPane();
+//		Label label = new Label("Hi");
+//		newNode.radiusProperty().bind(label.widthProperty());
+//		stackPane.getChildren().addAll(newNode, label);
+		
 		this.getChildren().add(newNode);
 	}
 	

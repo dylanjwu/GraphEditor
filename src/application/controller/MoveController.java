@@ -24,6 +24,10 @@ public class MoveController implements ModeController {
 		for (Circle node : nodeMap.keySet()) {
 			addNodeDragHandler(node);
 		}
+
+		for (Line edge : edgeMap.keySet()) {
+			addEdgeEventHandler(edge, null, null);
+		}
 	
 	}
 
@@ -32,10 +36,8 @@ public class MoveController implements ModeController {
 		// TODO select node when pressed on
 
 		node.setOnMouseDragged(null);
-//		node.setOnMousePressed(null);
 		node.setOnDragDetected(null);
 		node.setOnDragDropped(null);
-//		node.setOnMousePressed(null);
 		
 	    node.setOnMousePressed((t) -> {
 	      orgSceneX = t.getSceneX();
@@ -67,8 +69,7 @@ public class MoveController implements ModeController {
 
 	@Override
 	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
-		// TODO select edge
-		
+		edge.setOnMousePressed(null);
 	}
 
 }

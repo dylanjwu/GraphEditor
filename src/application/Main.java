@@ -123,21 +123,29 @@ public class Main extends Application {
 
 		controls.getChildren().add(new ToggleButton("Undirected"));
 		controls.getChildren().add(new ToggleButton("Weighted"));
-		controls.getChildren().add(new ToggleButton("Add/Delete"));
+
+		ToggleButton addBtn = new ToggleButton("Add");
+		addBtn.setOnMousePressed(e -> controller.changeMode("add"));
+		controls.getChildren().add(addBtn);
+
+		ToggleButton delBtn = new ToggleButton("Delete");
+		delBtn.setOnMousePressed(e -> controller.changeMode("delete"));
+		controls.getChildren().add(delBtn);
+
+		ToggleButton moveBtn = new ToggleButton("Move");
+		moveBtn.setOnMousePressed(e -> controller.changeMode("move"));
+		controls.getChildren().add(moveBtn);
 		
 		
 		StackPane stackpane = new StackPane();
-		Scene scene = new Scene(stackpane, 400, 400);
+		Scene scene = new Scene(stackpane, 800, 800);
 		stackpane.getChildren().addAll(controls, (Pane)view);
 		scene.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.D) controller.changeMode("move"); });
 		primaryStage.setTitle("Graph Editor");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-
 	
-//		
-//
 	}
 
 	public static void main(String[] args) {

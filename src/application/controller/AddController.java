@@ -29,6 +29,11 @@ public class AddController implements ModeController {
 		this.nodeMap = nodeMap;
 		this.edgeMap = edgeMap;
 		view.setModeController(this);
+		
+		for (Circle node : nodeMap.keySet()) {
+			addNodeDragHandler(node);
+		}
+
 	}
 	
 	@Override
@@ -40,13 +45,17 @@ public class AddController implements ModeController {
 	@Override
 	public void addNodeDragHandler(Circle node) {  
 		//add node to new vertex in nodeMap and model (model)
-		Vertex newVertex = new Vertex();
-		model.addVertex(newVertex);
-		nodeMap.put(node, newVertex);
+		
+		if (nodeMap.get(node) == null) { /** add vertex to model if node is newly created (in view)*/
+			Vertex newVertex = new Vertex();
+			model.addVertex(newVertex);
+			nodeMap.put(node, newVertex);
 
-		System.out.println(model);
-		System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
+			System.out.println(model);
+			System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
+		}
 
+		node.setOnMouseDragged(null); //necessary if coming from move controller
 		node.setOnMousePressed(e -> e.consume());
 		node.setOnDragDropped(
 			new EventHandler<DragEvent>() {
@@ -98,7 +107,18 @@ public class AddController implements ModeController {
 
 	@Override
 	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
-		edgeMap.put(edge, new Pair<>(source, dest));
+
+		boolean exists = false;
+		
+		for (Pair<Circle, Circle> pair : edgeMap.values()) {
+			if (pair.getKey().equals(source) && pair.getValue().equals(dest)) {
+				exists = true;
+			}
+		}
+		if (!exists)
+			edgeMap.put(edge, new Pair<>(source, dest));
+			
+		System.out.println("EDGE MAP in add edge handler: " + edgeMap.values());
 	}
 
 }
