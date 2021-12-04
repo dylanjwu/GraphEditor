@@ -57,6 +57,7 @@ public class MoveController extends AbstractModeController {
 	      orgSceneY = t.getSceneY();
 
 	      Circle c = (Circle) (t.getSource());
+	      view.highlightNode(c);
 	      c.toFront();
 	      t.consume();
 	    });
@@ -90,8 +91,7 @@ public class MoveController extends AbstractModeController {
 	    	if (dragged == false) {
 
 			  unselectAllNodes();
-			  view.highlightNode((Node)t.getSource());
-				
+			  view.highlightNode((Circle)t.getSource());
 			  orgSceneX = t.getSceneX();
 			  orgSceneY = t.getSceneY();
 

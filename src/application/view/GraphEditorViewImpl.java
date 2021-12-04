@@ -116,7 +116,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 		Circle newNode = new Circle(x, y, NODE_RADIUS);
 		modeController.addNodeHandlers(newNode);
 		newNode.setStroke(Color.RED);
-		newNode.setFill(Color.TRANSPARENT);
+		newNode.setFill(Color.WHITE);
 
 		// register this node with the controller, add handler
 //		StackPane stackPane = new StackPane();
@@ -149,6 +149,9 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	    edge.setVisible(true);
 	    
 		this.getChildren().add(edge);
+
+	    src.toFront();
+	    dst.toFront();
 		clear();
 	}
 

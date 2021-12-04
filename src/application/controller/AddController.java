@@ -110,14 +110,11 @@ public class AddController extends AbstractModeController {
 	
 	private boolean edgeExists(Circle source, Circle dest) {
 
-		boolean exists = false;
-		
 		for (Pair<Circle, Circle> pair : edgeMap.values()) {
-			if (pair.getKey().equals(source) && pair.getValue().equals(dest)) {
-				exists = true;
-			}
+			if (pair.getKey().equals(source) && pair.getValue().equals(dest))
+				return true;
 		}
-		return exists;
+		return false;
 	}
 
 	@Override
