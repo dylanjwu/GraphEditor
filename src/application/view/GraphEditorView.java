@@ -13,10 +13,6 @@ public interface GraphEditorView {
 
 	void moveGroup();
 
-	void selectGroup();
-
-	void unselectGroup();
-	
 	void selectEdge();
 
 	void zoomIn();
@@ -34,5 +30,13 @@ public interface GraphEditorView {
 	void setCurrentSourceNode(Circle node);
 
 	void setModeController(ModeController newController);
+
+	void moveSelection(Double x, Double y, Double w, Double h);
+
+	void quitSelection();
+
+	void highlightNode(Node node);
+
+	void unhighlightNode(Node node);
 
 }

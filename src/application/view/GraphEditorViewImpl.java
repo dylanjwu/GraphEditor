@@ -22,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
@@ -31,6 +32,8 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	private Circle currentSourceNode;
 	private ModeController modeController;
 	private static final int DIMENSION = 550;
+	
+	private Rectangle selectionRect;
 
 	public GraphEditorViewImpl(Graph model) {
 		this.setMaxHeight(DIMENSION);
@@ -80,19 +83,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void selectGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unselectGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void selectEdge() {
 		// TODO Auto-generated method stub
@@ -167,6 +158,36 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	    
 		this.getChildren().add(edge);
 		clear();
+	}
+
+	@Override
+	public void highlightNode(Node node) {
+		if (node instanceof Circle) ((Circle)node).setStroke(Color.RED);
+		if (node instanceof Line) ((Line)node).setStroke(Color.RED);
+	}
+	
+	@Override
+	public void unhighlightNode(Node node) {
+		if (node instanceof Circle) ((Circle)node).setStroke(Color.BLACK);
+		if (node instanceof Line) ((Line)node).setStroke(Color.BLACK);
+	}
+
+	@Override
+	public void moveSelection(Double x, Double y, Double w, Double h) {
+
+		this.getChildren().removeIf(p -> p.equals(selectionRect));
+		selectionRect = new Rectangle(x, y, w, h);
+
+		selectionRect.setFill(Color.YELLOW);
+		selectionRect.setOpacity(.2);
+		selectionRect.setStroke(Color.BLACK);
+		selectionRect.setVisible(true);
+		this.getChildren().add(selectionRect);
+	}
+
+	@Override
+	public void quitSelection() {
+		this.getChildren().removeIf(a -> a.equals(selectionRect));
 	}
 	
 }

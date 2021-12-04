@@ -122,6 +122,8 @@ public class Main extends Application {
 		controls.setSpacing(15);
 
 		controls.getChildren().add(new ToggleButton("Undirected"));
+		controls.getChildren().add(new ToggleButton("Directed"));
+		controls.getChildren().add(new ToggleButton("Unweighted"));
 		controls.getChildren().add(new ToggleButton("Weighted"));
 
 		ToggleButton addBtn = new ToggleButton("Add");

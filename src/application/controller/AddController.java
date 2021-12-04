@@ -30,9 +30,8 @@ public class AddController implements ModeController {
 		this.edgeMap = edgeMap;
 		view.setModeController(this);
 		
-		for (Circle node : nodeMap.keySet()) {
+		for (Circle node : nodeMap.keySet())
 			addNodeDragHandler(node);
-		}
 
 	}
 	
@@ -104,6 +103,7 @@ public class AddController implements ModeController {
 	}
 	
 	private boolean edgeExists(Circle source, Circle dest) {
+
 		boolean exists = false;
 		
 		for (Pair<Circle, Circle> pair : edgeMap.values()) {
