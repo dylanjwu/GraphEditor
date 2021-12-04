@@ -80,18 +80,6 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	}
 
 	@Override
-	public void moveGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void selectEdge() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void zoomIn() {
 //			scene.setOnZoomStarted(evt -> System.out.println("ZOOM STARTED"));
 ////		scene.setOnZoom(evt -> {

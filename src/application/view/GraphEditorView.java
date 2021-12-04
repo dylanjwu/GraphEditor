@@ -11,10 +11,6 @@ public interface GraphEditorView {
 
 	void removeEdge(Line edge);
 
-	void moveGroup();
-
-	void selectEdge();
-
 	void zoomIn();
 
 	void zoomOut();
