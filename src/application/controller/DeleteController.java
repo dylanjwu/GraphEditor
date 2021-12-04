@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import application.model.Graph;
@@ -9,6 +10,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
@@ -32,6 +34,20 @@ public class DeleteController extends AbstractModeController {
 		}
 	}
 	
+	/** only to be used if node is removed from nodeMap as well */
+	private void deleteNode(Circle node) {
+		model.removeVertex(nodeMap.get(node));
+		for (Line edge : edgeMap.keySet()) {
+			Circle sourceNode = edgeMap.get(edge).getKey();
+			Circle destNode = edgeMap.get(edge).getValue();
+			if (sourceNode.equals(node) || destNode.equals(node)){
+				view.removeEdge(edge);
+			}
+		}
+		view.removeGroup(node);
+	}
+
+
 	@Override
 	public void addNodeHandlers(Circle node) {
 
@@ -43,19 +59,23 @@ public class DeleteController extends AbstractModeController {
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				System.out.println("Delete mouse pressed");
-				model.removeVertex(nodeMap.get(event.getSource()));
-				//TODO delete all edges connected to node
-				for (Line edge : edgeMap.keySet()) {
-					Circle sourceNode = edgeMap.get(edge).getKey();
-					Circle destNode = edgeMap.get(edge).getValue();
-					if (sourceNode.equals(event.getSource()) || destNode.equals(event.getSource())){
-						view.removeEdge(edge);
+				Circle circle = (Circle)event.getSource();
+
+				if (circle.getStroke().equals(Color.RED)) {
+					Iterator<Circle> iterator = nodeMap.keySet().iterator();
+					
+					while (iterator.hasNext()) {
+						Circle otherCircle = iterator.next();
+						if (otherCircle.getStroke().equals(Color.RED)) {
+							deleteNode(otherCircle);
+							iterator.remove();
+						}
 					}
 				}
+				else {
+					deleteNode(circle);
+				}
 
-				nodeMap.remove(node);
-				view.removeGroup(node);
 			}
 			
 		});
