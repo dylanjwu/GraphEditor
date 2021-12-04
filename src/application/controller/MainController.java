@@ -6,6 +6,8 @@ import java.util.Map;
 import application.model.Graph;
 import application.model.Vertex;
 import application.view.GraphEditorView;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
@@ -13,6 +15,7 @@ import javafx.util.Pair;
 public class MainController implements Controller {
 	
 	private ModeController currentMode;
+
 	private GraphEditorView view;
 	private Graph model;
 

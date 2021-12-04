@@ -56,6 +56,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	public void setModeController(ModeController newController) {
 		modeController = newController;
 		modeController.addCanvasPressHandler(this);
+		modeController.addCanvasDragHandler(this);
 	}
 	
 	@Override
@@ -122,8 +123,8 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	public void addNode(double x, double y) {
 		if (modeController == null) return;
 		Circle newNode = new Circle(x, y, NODE_RADIUS);
-		modeController.addNodeDragHandler(newNode);
-		newNode.setStroke(Color.BLACK);
+		modeController.addNodeHandlers(newNode);
+		newNode.setStroke(Color.RED);
 		newNode.setFill(Color.TRANSPARENT);
 
 		// register this node with the controller, add handler
@@ -139,7 +140,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	public void addEdge(Circle src, Circle dst) {
 		Line edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
 		System.out.println(edge);
-		modeController.addEdgeEventHandler(edge, src, dst);
+		modeController.addEdgeEventHandlers(edge, src, dst);
 		//connect the edge to the src and dst nodes so that when one of them moves, the edge moves accordingly
 		System.out.println("src x: " + src.centerXProperty());
 

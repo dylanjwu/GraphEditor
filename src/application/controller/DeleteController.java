@@ -13,12 +13,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
-public class DeleteController implements ModeController {
-
-	private GraphEditorView view;
-	private Graph model;
-	private Map<Circle, Vertex> nodeMap;
-	private Map<Line, Pair<Circle, Circle>> edgeMap;
+public class DeleteController extends AbstractModeController {
 
 	public DeleteController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
 		this.model = model;
@@ -29,16 +24,17 @@ public class DeleteController implements ModeController {
 
 
 		for (Circle node : nodeMap.keySet()) {
-			addNodeDragHandler(node);
+			addNodeHandlers(node);
 		}
 
 		for (Line edge : edgeMap.keySet()) {
-			addEdgeEventHandler(edge, null, null);
+			addEdgeEventHandlers(edge, null, null);
 		}
 	}
 	
 	@Override
-	public void addNodeDragHandler(Circle node) {
+	public void addNodeHandlers(Circle node) {
+
 		node.setOnMouseDragged(null);
 		node.setOnDragOver(null);
 		node.setOnDragDropped(null);
@@ -66,13 +62,7 @@ public class DeleteController implements ModeController {
 	}
 
 	@Override
-	public void addCanvasPressHandler(Node node) {
-		node.setOnMousePressed(null);
-	}
-
-
-	@Override
-	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
 
 		edge.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override

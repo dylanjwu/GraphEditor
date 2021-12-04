@@ -12,17 +12,14 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 
-public class AddController implements ModeController {
+public class AddController extends AbstractModeController {
 
-	private GraphEditorView view;
-	private Graph model;
-	private Map<Circle, Vertex> nodeMap;
-	private Map<Line, Pair<Circle, Circle>> edgeMap;
 	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
@@ -31,18 +28,21 @@ public class AddController implements ModeController {
 		view.setModeController(this);
 		
 		for (Circle node : nodeMap.keySet())
-			addNodeDragHandler(node);
+			addNodeHandlers(node);
 
 	}
 	
 	@Override
 	public void addCanvasPressHandler(Node node) {
-		node.setOnMousePressed(event -> ((GraphEditorView)node).addNode(event.getX(), event.getY()));
+		node.setOnMousePressed(e -> {
+			unselectAllNodes();
+			((GraphEditorView)node).addNode(e.getX(), e.getY()); /** overrided part: add node to canvas */
+		});
 	}
 
 	
 	@Override
-	public void addNodeDragHandler(Circle node) {  
+	public void addNodeHandlers(Circle node) {  
 		//add node to new vertex in nodeMap and model (model)
 		
 		if (nodeMap.get(node) == null) { /** add vertex to model if node is newly created (in view)*/
@@ -55,7 +55,12 @@ public class AddController implements ModeController {
 		}
 
 		node.setOnMouseDragged(null); //necessary if coming from move controller
-		node.setOnMousePressed(e -> e.consume());
+		node.setOnMousePressed(e -> {
+			unselectAllNodes();
+			view.highlightNode((Node)e.getSource());
+			e.consume();
+		});
+		
 		node.setOnDragDropped(
 			new EventHandler<DragEvent>() {
 
@@ -70,6 +75,7 @@ public class AddController implements ModeController {
 
 							if (!edgeExists(source, dest)) {
 						
+								view.highlightNode(dest);
 								System.out.println(model);
 								System.out.println("nodeMap key set: " + nodeMap.entrySet().toString());
 
@@ -115,14 +121,20 @@ public class AddController implements ModeController {
 	}
 
 	@Override
-	public void addEdgeEventHandler(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
 
 		if (!edgeExists(source, dest)) {
 			// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
 			model.addEdge(nodeMap.get(source), nodeMap.get(dest));
 			edgeMap.put(edge, new Pair<>(source, dest));
 		}
-			
+
+		edge.setOnMousePressed(e -> {
+			unselectAllNodes();
+			view.highlightNode((Node)e.getSource());
+			e.consume();
+		});	
+
 		System.out.println("EDGE MAP in add edge handler: " + edgeMap.values());
 	}
 
