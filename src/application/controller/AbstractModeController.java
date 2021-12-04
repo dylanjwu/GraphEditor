@@ -43,6 +43,7 @@ public abstract class AbstractModeController implements ModeController {
 	public void addCanvasPressHandler(Node node) {
 		node.setOnMousePressed(e -> {
 			unselectAllNodes();
+			
 		});
 	}
 
@@ -57,7 +58,7 @@ public abstract class AbstractModeController implements ModeController {
 			public void handle(MouseEvent e) {
 
 				if (selectionStart == null) return;
-
+				
 				Double startX; 
 				Double startY;
 				Double x = e.getX();
@@ -115,8 +116,7 @@ public abstract class AbstractModeController implements ModeController {
 			}
 			
 		});
-		
-		node.setOnMouseReleased(e -> { 
+		node.setOnMouseReleased(e -> {
 				view.quitSelection(); 
 				selectionStart = null;
 		});

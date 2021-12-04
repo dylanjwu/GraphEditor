@@ -28,7 +28,10 @@ import javafx.util.Pair;
 
 public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	static final int NODE_RADIUS = 15;
-	private Graph model; // use this to iterate through the nodes and edges
+
+	/** if used, should segregate the interface, so that mutations are not possible here */
+	private Graph model; // use this to iterate through the nodes and edges 
+	
 	private Circle currentSourceNode;
 	private ModeController modeController;
 	private static final int DIMENSION = 550;
