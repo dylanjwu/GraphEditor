@@ -1,15 +1,13 @@
 package application.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javafx.scene.Node;
-import javafx.scene.shape.Line;
-
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
 
 public interface Graph {
 	void addVertex(Vertex v);

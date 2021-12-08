@@ -1,19 +1,9 @@
 package application.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import application.controller.ModeController;
 import application.model.Graph;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -23,8 +13,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.util.Pair;
+
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
 
 public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	static final int NODE_RADIUS = 15;
@@ -169,20 +164,34 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 
 	@Override
 	public void moveSelection(Double x, Double y, Double w, Double h) {
+		if(x >= 0 && y >= 0 && x+w <= DIMENSION && y+h <= DIMENSION) {
 
-		this.getChildren().removeIf(p -> p.equals(selectionRect));
-		selectionRect = new Rectangle(x, y, w, h);
+			this.getChildren().removeIf(p -> p.equals(selectionRect));
+			selectionRect = new Rectangle(x, y, w, h);
 
-		selectionRect.setFill(Color.YELLOW);
-		selectionRect.setOpacity(.2);
-		selectionRect.setStroke(Color.BLACK);
-		selectionRect.setVisible(true);
-		this.getChildren().add(selectionRect);
+			selectionRect.setFill(Color.YELLOW);
+			selectionRect.setOpacity(.2);
+			selectionRect.setStroke(Color.BLACK);
+			selectionRect.setVisible(true);
+			this.getChildren().add(selectionRect);
+		}
 	}
 
 	@Override
 	public void quitSelection() {
 		this.getChildren().removeIf(a -> a.equals(selectionRect));
+	}
+
+	@Override
+	public void moveNode(Circle node, Double offsetX, Double offsetY) {
+		double nextX = node.getCenterX() + offsetX;
+		double nextY = node.getCenterY() + offsetY;
+
+		if (node.getStroke().equals(Color.RED) && nextX-NODE_RADIUS > 0 && nextX+NODE_RADIUS < DIMENSION 
+				&& nextY-NODE_RADIUS > 0 && nextY+NODE_RADIUS < DIMENSION) {
+		  node.setCenterX(nextX);
+		  node.setCenterY(nextY);
+		}
 	}
 	
 }

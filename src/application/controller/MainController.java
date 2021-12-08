@@ -1,16 +1,22 @@
 package application.controller;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
 import application.view.GraphEditorView;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
+
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
 
 public class MainController implements Controller {
 	
@@ -31,6 +37,7 @@ public class MainController implements Controller {
 
 		this.view = view;
 		this.model =  model;
+		
 	}
 
 	@Override

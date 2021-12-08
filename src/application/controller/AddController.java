@@ -2,6 +2,7 @@ package application.controller;
 
 import java.util.Map;
 
+import application.model.DefaultVertex;
 import application.model.Graph;
 import application.model.Vertex;
 import application.view.GraphEditorView;
@@ -12,11 +13,16 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
 
 public class AddController extends AbstractModeController {
 
@@ -35,7 +41,7 @@ public class AddController extends AbstractModeController {
 	@Override
 	public void addCanvasPressHandler(Node node) {
 		node.setOnMousePressed(e -> {
-			unselectAllNodes();
+			unselectGraph();
 			((GraphEditorView)node).addNode(e.getX(), e.getY()); /** overrided part: add node to canvas */
 		});
 	}
@@ -46,7 +52,7 @@ public class AddController extends AbstractModeController {
 		//add node to new vertex in nodeMap and model (model)
 		
 		if (nodeMap.get(node) == null) { /** add vertex to model if node is newly created (in view)*/
-			Vertex newVertex = new Vertex();
+			Vertex newVertex = new DefaultVertex();
 			model.addVertex(newVertex);
 			nodeMap.put(node, newVertex);
 
@@ -56,7 +62,7 @@ public class AddController extends AbstractModeController {
 
 		node.setOnMouseDragged(null); //necessary if coming from move controller
 		node.setOnMousePressed(e -> {
-			unselectAllNodes();
+			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();
 		});
@@ -127,7 +133,7 @@ public class AddController extends AbstractModeController {
 		}
 
 		edge.setOnMousePressed(e -> {
-			unselectAllNodes();
+			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();
 		});	

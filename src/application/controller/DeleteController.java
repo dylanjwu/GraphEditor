@@ -1,21 +1,35 @@
 package application.controller;
 
 import java.util.Iterator;
+
 import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
 import application.view.GraphEditorView;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
+
 public class DeleteController extends AbstractModeController {
+	
+	private boolean nodeSelected(Circle node) {
+		return node.getStroke().equals(Color.RED);
+	}
+
+//	private boolean edgeSelected(Line edge) {
+//		return edge.getStroke().equals(Color.RED);
+//	}
 
 	public DeleteController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
 		this.model = model;
@@ -59,14 +73,18 @@ public class DeleteController extends AbstractModeController {
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+
 				Circle circle = (Circle)event.getSource();
 
-				if (circle.getStroke().equals(Color.RED)) {
+				if (nodeSelected(circle)) {
+
 					Iterator<Circle> iterator = nodeMap.keySet().iterator();
 					
 					while (iterator.hasNext()) {
+
 						Circle otherCircle = iterator.next();
-						if (otherCircle.getStroke().equals(Color.RED)) {
+
+						if (nodeSelected(otherCircle)) {
 							deleteNode(otherCircle);
 							iterator.remove();
 						}
@@ -87,6 +105,7 @@ public class DeleteController extends AbstractModeController {
 		edge.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				// REMOVE EDGE
 				model.removeEdge(nodeMap.get(edgeMap.get(event.getSource()).getKey()), 
 						nodeMap.get(edgeMap.get(event.getSource()).getValue()));
 

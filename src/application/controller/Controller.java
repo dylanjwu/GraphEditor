@@ -1,5 +1,12 @@
 package application.controller;
 
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
+
 public interface Controller {
 	void createNew();
 	void save();

@@ -1,12 +1,15 @@
 package application.controller;
 
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.util.Pair;
+
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
 
 public interface ModeController {
 
@@ -14,7 +17,7 @@ public interface ModeController {
 
 	void addEdgeEventHandlers(Line edge, Circle source, Circle dest);
 	
-	void unselectAllNodes();
+	void unselectGraph();
 
 	void addCanvasPressHandler(Node node);
 

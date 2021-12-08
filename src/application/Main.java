@@ -1,11 +1,5 @@
 package application;
 
-import java.awt.TextField;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import application.controller.Controller;
 import application.controller.MainController;
 import application.model.DefaultGraph;
@@ -13,118 +7,115 @@ import application.model.Graph;
 import application.view.GraphEditorView;
 import application.view.GraphEditorViewImpl;
 import javafx.application.Application;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
 /**
  * 
- * If ADD, 
- * 	(selections can exist but cannot be created)
- * 
- * 	CANVAS:
- * 		Clicking on canvas creates a a node
- * 	GRAPHNODE:
- * 		Dragging from a node and dropping on a different node creates an edge
- * 		Clicking on an existing node does nothing	
- *  EDGE:
- * 		Clicking on an existing edge does nothing
- * 	SELECTION:
- * 		Clicking on a selection undoes the selection
- * 
- * If DELETE
- * 	(selections can exist but cannot be created)
- * 
- * 	CANVAS:
- * 		Clicking on canvas does nothing
- *  GRAPHNODE:
- * 		Clicking on a node deletes the node and any connected edges (from inEdges, and outEdges lists)
- *  EDGE:
- *  	Clicking on an edge deletes that edge
- * 	SELECTION:
- *  	Clicking on selection deletes all of the nodes and edges in the selection
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
  *  
- *  
- * If MOVE
- * 
- *  CANVAS:
- * 		Clicking on canvas undoes selection if it exists
- * 	GRAPHNODE:
- * 		Dragging a node moves that node and re-orients any connected edges (talks to EDGE)
- * 		Selection over a node highlights the node (becomes part of the selection)
- * 	SELECTION: 
- * 		Dragging on canvas creates a selection
- * 		Releasing a drag event preserves the new selection
- * 		Clicking on a selection does nothing (preserves selection)	
- * 		Dragging on any point in a selection moves the entire selection as if it were a single node
  */
-
-/**
- * GRAPHNODE:
- *  	inEdges, outEdges, label, xPosition, yPosition
- *			 
- * (all edges in a graph must be the same kind)
- * 
- * DECORATOR PATTERN:
- * 
- * EDGE (UNDIRECTED and UNWEIGHTED by default):
- * 		source node, destination node, startXY, endXY
- * 
- * 		WEIGHTED_EDGE
- * 
- * 		DIRECTED_EDGE
- * 
- * (4 possibilities)
- * EDGE (unweighted, undirected)
- * EDGE, WEIGHTED_EDGE	(weighted, undirected)
- * EDGE, DIRECTED_EDGE (unweighted, directed)
- * EDGE, WEIGHTED_EDGE, DIRECTED_EDGE (weighted, directed)
- * 
- * 
- * COMPOSITE PATTERN: SELECTION and GRAPHNODE both implement a Draggable interface:
- * 		
- */
-
 
 
 public class Main extends Application {
 	
+
+	private void showNewChooser(Stage primaryStage) {
+		
+		Dialog<String> dialog = new Dialog<>();
+		DialogPane pane = new DialogPane();
+		pane.getChildren().add(new ChoiceBox<String>());
+		dialog.setDialogPane(pane);
+		dialog.showAndWait();
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.getExtensionFilters().addAll(
+//			 new FileChooser.ExtensionFilter("Text Files", "*.txt")
+//        );
+//        
+//        fileChooser.showSaveDialog(primaryStage);
+
+
+		// https://code.makery.ch/blog/javafx-dialogs-official/
+//		 dialog = new TextInputDialog("walter");
+//		dialog.setTitle("Create new graph");
+//		dialog.setHeaderText("Create new graph project");
+//		dialog.setContentText("enter filename");
+//
+//		// Traditional way to get the response value.
+//		Optional<String> result = dialog.showAndWait();
+//		if (result.isPresent()){
+//			System.out.println("Your file: " + result.get());
+//		}
+//
+//		// The Java 8 way to get the response value (with lambda expression).
+//		result.ifPresent(name -> System.out.println("Your name: " + name));
+		
+	}
+	
+	private void showExistingChooser(Stage primaryStage) {
+		FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+			 new FileChooser.ExtensionFilter("Text Files", "*.txt")
+        );
+        
+//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        fileChooser.showOpenDialog(primaryStage);
+
+	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		Graph model = new DefaultGraph();
 		GraphEditorView view = new GraphEditorViewImpl(model);
-
 		Controller controller = new MainController(view, model);
-		
-		MenuBar menu = new MenuBar();
-		menu.setPrefSize(600, 29);
-		menu.setLayoutX(-2);
-		menu.setLayoutY(1);
 
-		VBox controls = new VBox();
+		Menu m = new Menu("File");
+		  
+		// create menuitems
+		MenuItem m1 = new MenuItem("Create new");
+//		m1.setOnAction(e -> showNewChooser(primaryStage));
+//
+		MenuItem m2 = new MenuItem("Choose existing");
+//		m2.setOnAction(e -> showExistingChooser(primaryStage));
+
+		MenuItem m3 = new MenuItem("Save");
+		MenuItem m4 = new MenuItem("Save As");
+		MenuItem m5 = new MenuItem("Undo");
+		MenuItem m6 = new MenuItem("Redo");
+		MenuItem m7 = new MenuItem("Copy");
+		MenuItem m8 = new MenuItem("Paste");
+
+
+		// add menu items to menu
+		m.getItems().addAll(m1, m2, m3, m4, m5, m6, m7, m8);
+  
+		// create a menubar
+		MenuBar mb = new MenuBar();
+  
+		// add menu to menubar
+		mb.getMenus().add(m);
+
+
+		VBox controls = new VBox(mb);
 		controls.setPrefSize(129, 352);
 		controls.setPadding(new Insets(10,10,10,10));
 		controls.setSpacing(15);
-
-		controls.getChildren().add(new ToggleButton("Undirected"));
-		controls.getChildren().add(new ToggleButton("Directed"));
-		controls.getChildren().add(new ToggleButton("Unweighted"));
-		controls.getChildren().add(new ToggleButton("Weighted"));
 
 		ToggleButton addBtn = new ToggleButton("Add");
 		addBtn.setOnMousePressed(e -> controller.changeMode("add"));
@@ -142,7 +133,20 @@ public class Main extends Application {
 		StackPane stackpane = new StackPane();
 		Scene scene = new Scene(stackpane, 800, 800);
 		stackpane.getChildren().addAll(controls, (Pane)view);
-		scene.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.D) controller.changeMode("move"); });
+
+
+		scene.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.M) 
+				controller.changeMode("move"); 
+
+			else if (e.getCode() == KeyCode.D) 
+				controller.changeMode("delete"); 
+
+			else if (e.getCode() == KeyCode.A) 
+				controller.changeMode("add"); 
+		});
+
+
 		primaryStage.setTitle("Graph Editor");
 		primaryStage.setScene(scene);
 		primaryStage.show();

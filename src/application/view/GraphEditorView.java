@@ -5,6 +5,13 @@ import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
+/**
+ * 
+ * @author Dylan Wu
+ * CS5010 v1 Fall 2021 - Final Project
+ *  
+ */
+
 public interface GraphEditorView {
 
 	void removeGroup(Node node);
@@ -34,5 +41,7 @@ public interface GraphEditorView {
 	void highlightNode(Node node);
 
 	void unhighlightNode(Node node);
+	
+	void moveNode(Circle node, Double offsetX, Double offsetY);
 
 }
