@@ -4,13 +4,12 @@ import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
@@ -24,24 +23,22 @@ public abstract class AbstractModeController implements ModeController {
 
 	protected GraphEditorView view;
 	protected Graph model;
-	protected Map<Circle, Vertex> nodeMap;
-	protected Map<Line, Pair<Circle, Circle>> edgeMap;
+	protected Map<GraphNode, Vertex> nodeMap;
+	protected Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap;
 	protected Pair<Double, Double> selectionStart;
 
 	@Override
 	public void unselectGraph() {
 		/** un-highlight all incident nodes */
-		for (Circle circle : nodeMap.keySet()) {
-			System.out.println(circle.getFill());
-			if (circle.getStroke().equals(Color.RED)){
-				System.out.println("IS RED IN PARENT");
+		for (GraphNode circle : nodeMap.keySet()) {
+			if (circle.isHighlighted()){
 				view.unhighlightNode(circle);
 			}
 		}
 		
 		/** un-highlight all incident edges */
-		for (Line line : edgeMap.keySet()) {
-			if (line.getStroke().equals(Color.RED)){
+		for (GraphEdge line : edgeMap.keySet()) {
+			if (line.isHighlighted()){
 				view.unhighlightNode(line);
 			}
 		}
@@ -57,7 +54,7 @@ public abstract class AbstractModeController implements ModeController {
 	private void selectSubgraph(Double startX, Double startY, Double width, Double height) {
 		
 			/** highlight all incident nodes */
-			for (Circle node : nodeMap.keySet()) {
+			for (GraphNode node : nodeMap.keySet()) {
 				if (node.getCenterX() > startX && node.getCenterX() < startX+width &&
 						node.getCenterY() > startY && node.getCenterY() < startY+height) {
 
@@ -70,12 +67,8 @@ public abstract class AbstractModeController implements ModeController {
 			}
 			
 			/** highlight all incident edges */
-			for (Line node : edgeMap.keySet()) {
-				if (node.getEndX() > startX && node.getEndX() < startX+width &&
-						node.getEndY() > startY && node.getEndY() < startY+height &&
-						node.getStartX() > startX && node.getStartX() < startX+width &&
-						node.getStartY() > startY && node.getStartY() < startY+height) {
-
+			for (GraphEdge node : edgeMap.keySet()) {
+				if (node.isCovered(startX, startY, width, height)) {
 					view.highlightNode(node);
 				}
 				else {

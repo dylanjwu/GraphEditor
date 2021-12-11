@@ -6,7 +6,9 @@ import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -23,15 +25,11 @@ import javafx.util.Pair;
 
 public class DeleteController extends AbstractModeController {
 	
-	private boolean nodeSelected(Circle node) {
-		return node.getStroke().equals(Color.RED);
-	}
-
 //	private boolean edgeSelected(Line edge) {
 //		return edge.getStroke().equals(Color.RED);
 //	}
 
-	public DeleteController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
+	public DeleteController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
 		this.nodeMap = nodeMap;
@@ -39,21 +37,21 @@ public class DeleteController extends AbstractModeController {
 		view.setModeController(this);
 
 
-		for (Circle node : nodeMap.keySet()) {
+		for (GraphNode node : nodeMap.keySet()) {
 			addNodeHandlers(node);
 		}
 
-		for (Line edge : edgeMap.keySet()) {
+		for (GraphEdge edge : edgeMap.keySet()) {
 			addEdgeEventHandlers(edge, null, null);
 		}
 	}
 	
 	/** only to be used if node is removed from nodeMap as well */
-	private void deleteNode(Circle node) {
+	private void deleteNode(GraphNode node) {
 		model.removeVertex(nodeMap.get(node));
-		for (Line edge : edgeMap.keySet()) {
-			Circle sourceNode = edgeMap.get(edge).getKey();
-			Circle destNode = edgeMap.get(edge).getValue();
+		for (GraphEdge edge : edgeMap.keySet()) {
+			GraphNode sourceNode = edgeMap.get(edge).getKey();
+			GraphNode destNode = edgeMap.get(edge).getValue();
 			if (sourceNode.equals(node) || destNode.equals(node)){
 				view.removeEdge(edge);
 			}
@@ -63,28 +61,29 @@ public class DeleteController extends AbstractModeController {
 
 
 	@Override
-	public void addNodeHandlers(Circle node) {
+	public void addNodeHandlers(GraphNode node) {
 
 		node.setOnMouseDragged(null);
 		node.setOnDragOver(null);
 		node.setOnDragDropped(null);
 		node.setOnDragDetected(null);
 
+		/** SAVE STATE */
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 
-				Circle circle = (Circle)event.getSource();
+				GraphNode circle = (GraphNode)event.getSource();
 
-				if (nodeSelected(circle)) {
+				if (circle.isHighlighted()) {
 
-					Iterator<Circle> iterator = nodeMap.keySet().iterator();
+					Iterator<GraphNode> iterator = nodeMap.keySet().iterator();
 					
 					while (iterator.hasNext()) {
 
-						Circle otherCircle = iterator.next();
+						GraphNode otherCircle = iterator.next();
 
-						if (nodeSelected(otherCircle)) {
+						if (otherCircle.isHighlighted()) {
 							deleteNode(otherCircle);
 							iterator.remove();
 						}
@@ -100,18 +99,18 @@ public class DeleteController extends AbstractModeController {
 	}
 
 	@Override
-	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
 
 		edge.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				// REMOVE EDGE
+				/** SAVE STATE */
 				model.removeEdge(nodeMap.get(edgeMap.get(event.getSource()).getKey()), 
 						nodeMap.get(edgeMap.get(event.getSource()).getValue()));
 
 				System.out.println("REMOVED EDGE: " + edgeMap);
-				edgeMap.remove((Line)event.getSource());
-				view.removeEdge((Line) event.getSource());
+				edgeMap.remove((GraphEdge)event.getSource());
+				view.removeEdge((GraphEdge) event.getSource());
 			}
 			
 		});

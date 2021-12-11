@@ -1,5 +1,7 @@
 package application.controller;
 
+import application.view.GraphEdge;
+import application.view.GraphNode;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -13,9 +15,9 @@ import javafx.scene.shape.Line;
 
 public interface ModeController {
 
-	void addNodeHandlers(Circle node);
+	void addNodeHandlers(GraphNode node);
 
-	void addEdgeEventHandlers(Line edge, Circle source, Circle dest);
+	void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest);
 	
 	void unselectGraph();
 

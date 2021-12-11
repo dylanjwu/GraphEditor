@@ -68,6 +68,8 @@ public class DefaultVertex implements Vertex{
 		if (getClass() != obj.getClass())
 			return false;
 		Vertex other = (Vertex) obj;
+		/** PROBLEM HERE: here to fix, error is occuring when try to add an edge to a node that already has at least 2 edges*/
+		//STACK overflow error, probably due to infinite recursion.
 		return Objects.equals(edges, other.edges()) && id == other.getId();
 	}
 

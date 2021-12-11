@@ -6,7 +6,9 @@ import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
@@ -23,11 +25,13 @@ public class MainController implements Controller {
 	private ModeController currentMode;
 
 	private GraphEditorView view;
-	private Graph model;
 
-	private Map<Circle, Vertex> nodeMap;
-	
-	private Map<Line, Pair<Circle, Circle>> edgeMap;
+	//UNDO/REDO: save state with commands (if added, then remove command is added, vice versa)
+	private Graph model; 
+
+	//UNDO/REDO: save state (copies) of nodeMap and edgeMap
+	private Map<GraphNode, Vertex> nodeMap;
+	private Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap;
 
 	public MainController(GraphEditorView view, Graph model) {
 		this.nodeMap = new HashMap<>();

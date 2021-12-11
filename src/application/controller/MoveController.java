@@ -5,7 +5,9 @@ import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,12 +21,13 @@ import javafx.util.Pair;
  *  
  */
 
+
 public class MoveController extends AbstractModeController {
 
 	private double orgSceneX, orgSceneY;
 	private boolean dragged;
 
-	public MoveController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
+	public MoveController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.view = view;
 		this.model = model;
 		this.nodeMap = nodeMap;
@@ -33,11 +36,11 @@ public class MoveController extends AbstractModeController {
 
 		view.setModeController(this);
 
-		for (Circle node : nodeMap.keySet()) {
+		for (GraphNode node : nodeMap.keySet()) {
 			addNodeHandlers(node);
 		}
 
-		for (Line edge : edgeMap.keySet()) {
+		for (GraphEdge edge : edgeMap.keySet()) {
 			addEdgeEventHandlers(edge, null, null);
 		}
 	
@@ -45,20 +48,20 @@ public class MoveController extends AbstractModeController {
 
 
 	@Override
-	public void addNodeHandlers(Circle node) {
+	public void addNodeHandlers(GraphNode node) {
 
 		node.setOnMouseDragged(null);
 		node.setOnDragDetected(null);
 		node.setOnDragDropped(null);
-		
+
+		/** SAVE STATE */
 	    node.setOnMousePressed((t) -> {
 		
-	    	/** SAVE STATE */
 	      orgSceneX = t.getSceneX();
 	      orgSceneY = t.getSceneY();
 
 	      Circle c = (Circle) (t.getSource());
-	      view.highlightNode(c);
+	      view.highlightNode(c); 
 	      c.toFront();
 	      t.consume();
 	    });
@@ -73,7 +76,7 @@ public class MoveController extends AbstractModeController {
 	      double offsetY = t.getSceneY() - orgSceneY;
 
 
-	      for (Circle otherNode : nodeMap.keySet()) {
+	      for (GraphNode otherNode : nodeMap.keySet()) {
 	    	  view.moveNode(otherNode, offsetX, offsetY);
 	      }
 
@@ -82,7 +85,8 @@ public class MoveController extends AbstractModeController {
 
 	      t.consume();
 	    });	
-	    
+
+	    /** SAVE STATE */
 	    node.setOnMouseReleased(t -> {
 	    	
 	    	if (dragged == false) {
@@ -99,9 +103,10 @@ public class MoveController extends AbstractModeController {
 	}
 
 	@Override
-	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
+
+		/** SAVE STATE */
 		edge.setOnMousePressed(e -> {
-			/** SAVE STATE */
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();

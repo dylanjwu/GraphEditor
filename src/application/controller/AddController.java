@@ -5,7 +5,9 @@ import java.util.Map;
 import application.model.DefaultVertex;
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.ClipboardContent;
@@ -26,20 +28,21 @@ import javafx.util.Pair;
 
 public class AddController extends AbstractModeController {
 
-	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
+	public AddController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
 		this.nodeMap = nodeMap;
 		this.edgeMap = edgeMap;
 		view.setModeController(this);
 		
-		for (Circle node : nodeMap.keySet())
+		for (GraphNode node : nodeMap.keySet())
 			addNodeHandlers(node);
 
 	}
 	
 	@Override
 	public void addCanvasPressHandler(Node node) {
+		/** SAVE STATE */
 		node.setOnMousePressed(e -> {
 			unselectGraph();
 			((GraphEditorView)node).addNode(e.getX(), e.getY()); /** overrided part: add node to canvas */
@@ -48,9 +51,10 @@ public class AddController extends AbstractModeController {
 
 	
 	@Override
-	public void addNodeHandlers(Circle node) {  
+	public void addNodeHandlers(GraphNode node) {  
 		//add node to new vertex in nodeMap and model (model)
 		
+		/** SAVE STATE */
 		if (nodeMap.get(node) == null) { /** add vertex to model if node is newly created (in view)*/
 			Vertex newVertex = new DefaultVertex();
 			model.addVertex(newVertex);
@@ -61,12 +65,15 @@ public class AddController extends AbstractModeController {
 		}
 
 		node.setOnMouseDragged(null); //necessary if coming from move controller
+
+		/** SAVE STATE */
 		node.setOnMousePressed(e -> {
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();
 		});
 		
+		/** SAVE STATE */
 		node.setOnDragDropped(
 			new EventHandler<DragEvent>() {
 
@@ -76,8 +83,8 @@ public class AddController extends AbstractModeController {
 						event.setDropCompleted(true);
 
 						if (view.getCurrentSourceNode() != null) {
-							Circle source = (Circle)view.getCurrentSourceNode();
-							Circle dest = (Circle)event.getSource();
+							GraphNode source = (GraphNode)view.getCurrentSourceNode();
+							GraphNode dest = (GraphNode)event.getSource();
 
 							if (!edgeExists(source, dest)) {
 						
@@ -103,9 +110,10 @@ public class AddController extends AbstractModeController {
 				}
 		});
 
+		/** SAVE STATE */
        node.setOnDragDetected((MouseEvent event) -> {
 
-    	   	view.setCurrentSourceNode((Circle)event.getSource()); /** set the node to be the source node */
+    	   	view.setCurrentSourceNode((GraphNode)event.getSource()); /** set the node to be the source node */
 
             Dragboard db = ((Node) event.getSource()).startDragAndDrop(TransferMode.COPY_OR_MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -114,9 +122,9 @@ public class AddController extends AbstractModeController {
         });
 	}
 	
-	private boolean edgeExists(Circle source, Circle dest) {
+	private boolean edgeExists(GraphNode source, GraphNode dest) {
 
-		for (Pair<Circle, Circle> pair : edgeMap.values()) {
+		for (Pair<GraphNode, GraphNode> pair : edgeMap.values()) {
 			if (pair.getKey().equals(source) && pair.getValue().equals(dest))
 				return true;
 		}
@@ -124,14 +132,16 @@ public class AddController extends AbstractModeController {
 	}
 
 	@Override
-	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
 
+		/** SAVE STATE */
 		if (!edgeExists(source, dest)) {
 			// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
 			model.addEdge(nodeMap.get(source), nodeMap.get(dest));
 			edgeMap.put(edge, new Pair<>(source, dest));
 		}
 
+		/** SAVE STATE */
 		edge.setOnMousePressed(e -> {
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());
@@ -142,3 +152,5 @@ public class AddController extends AbstractModeController {
 	}
 
 }
+
+
