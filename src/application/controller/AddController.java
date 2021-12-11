@@ -27,7 +27,7 @@ import javafx.util.Pair;
  */
 
 public class AddController extends AbstractModeController {
-
+	
 	public AddController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;

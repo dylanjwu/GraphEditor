@@ -7,15 +7,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class GraphNode extends StackPane {
-	Circle circle;
-	public GraphNode(Double x, Double y, int id) {
+	private Circle circle;
+	private static int NODE_ID = 0;
+
+	public GraphNode(Double x, Double y) {
+		
+		this.setLayoutX(x);
+		this.setLayoutY(y);
+		this.setWidth(2*GraphEditorViewImpl.NODE_RADIUS);
+		this.setHeight(2*GraphEditorViewImpl.NODE_RADIUS);
 		System.out.println("NEW NODE: " + x + " " + y);
 		Circle circle = new Circle(x, y, GraphEditorViewImpl.NODE_RADIUS);
 		this.circle = circle;
 		this.circle.setStroke(Color.RED);
 		this.circle.setFill(Color.WHITE);
 		this.getChildren().add(circle);
-		Label labelId = new Label();
+		Label labelId = new Label(String.valueOf(NODE_ID));
+		NODE_ID++;
+
 		this.getChildren().add(labelId);
 	}
 	public double getCenterX() {

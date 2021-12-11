@@ -113,7 +113,7 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	@Override
 	public void addNode(double x, double y) {
 		if (modeController == null) return;
-		GraphNode newNode = new GraphNode(x, y, NODE_RADIUS);
+		GraphNode newNode = new GraphNode(x, y);
 		modeController.addNodeHandlers(newNode);
 
 		// register this node with the controller, add handler
