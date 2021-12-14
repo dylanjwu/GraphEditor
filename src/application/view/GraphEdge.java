@@ -7,39 +7,34 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public class GraphEdge extends StackPane {
-	private Line edge;
+public class GraphEdge extends Line {
+
 	public GraphEdge(GraphNode src, GraphNode dst) {
-		this.edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
+		super(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
+		
+		startXProperty().bind(src.layoutXProperty());
+		startYProperty().bind(src.layoutYProperty());
+		endXProperty().bind(dst.layoutXProperty());
+		endYProperty().bind(dst.layoutYProperty());
 
-		this.setLayoutX(src.getCenterX());
-		this.setLayoutY(src.getCenterY());
-		this.setWidth(dst.getCenterX()-src.getCenterX());
-		this.setHeight(dst.getCenterY()-src.getCenterY());
+//		startXProperty().bind(src.centerXProperty());
+//		startYProperty().bind(src.centerYProperty());
+//		endXProperty().bind(dst.centerXProperty());
+//		endYProperty().bind(dst.centerYProperty());
 
-		edge.startXProperty().bind(src.centerXProperty());
-		edge.startYProperty().bind(src.centerYProperty());
-		edge.endXProperty().bind(dst.centerXProperty());
-		edge.endYProperty().bind(dst.centerYProperty());
-
-	    edge.setStrokeWidth(3);
-	    edge.setStroke(Color.BLACK);
-	    edge.setVisible(true);
-
-
-	    this.getChildren().add(edge);
-//	    TextField field = new TextField("Edge");
-//	    this.getChildren().add(field);
-	    
+	    setStrokeWidth(3);
+	    setStroke(Color.BLACK);
+	    setVisible(true);
 	}
+
 	public boolean isHighlighted() {
-		return edge.getStroke().equals(Color.RED);
+		return getStroke().equals(Color.RED);
 	}
 	public boolean isCovered(double startX, double startY, double width, double height) {
-		return (edge.getEndX() > startX && edge.getEndX() < startX+width &&
-						edge.getEndY() > startY && edge.getEndY() < startY+height &&
-						edge.getStartX() > startX && edge.getStartX() < startX+width &&
-						edge.getStartY() > startY && edge.getStartY() < startY+height);
+		return (getEndX() > startX && getEndX() < startX+width &&
+						getEndY() > startY && getEndY() < startY+height &&
+						getStartX() > startX && getStartX() < startX+width &&
+						getStartY() > startY && getStartY() < startY+height);
 
 	}
 }

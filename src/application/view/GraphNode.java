@@ -11,9 +11,10 @@ public class GraphNode extends StackPane {
 	private static int NODE_ID = 0;
 
 	public GraphNode(Double x, Double y) {
+
 		
-		this.setLayoutX(x);
-		this.setLayoutY(y);
+		this.setLayoutX(x-GraphEditorViewImpl.NODE_RADIUS);
+		this.setLayoutY(y-GraphEditorViewImpl.NODE_RADIUS);
 		this.setWidth(2*GraphEditorViewImpl.NODE_RADIUS);
 		this.setHeight(2*GraphEditorViewImpl.NODE_RADIUS);
 		System.out.println("NEW NODE: " + x + " " + y);
@@ -21,11 +22,10 @@ public class GraphNode extends StackPane {
 		this.circle = circle;
 		this.circle.setStroke(Color.RED);
 		this.circle.setFill(Color.WHITE);
-		this.getChildren().add(circle);
 		Label labelId = new Label(String.valueOf(NODE_ID));
 		NODE_ID++;
 
-		this.getChildren().add(labelId);
+		this.getChildren().addAll(circle, labelId);
 	}
 	public double getCenterX() {
 		return circle.getCenterX();

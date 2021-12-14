@@ -186,8 +186,8 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 
 	@Override
 	public void moveNode(GraphNode node, Double offsetX, Double offsetY) {
-		double nextX = node.getCenterX() + offsetX;
-		double nextY = node.getCenterY() + offsetY;
+		double nextX = node.getLayoutX() + offsetX;
+		double nextY = node.getLayoutY() + offsetY;
 
 		if (node.isHighlighted() && nextX-NODE_RADIUS > 0 && nextX+NODE_RADIUS < DIMENSION 
 				&& nextY-NODE_RADIUS > 0 && nextY+NODE_RADIUS < DIMENSION) {
