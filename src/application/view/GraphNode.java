@@ -1,17 +1,25 @@
 package application.view;
 
+import application.view.visitor.GraphVisitor;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class GraphNode extends StackPane {
+/**
+ * 
+ * View class for the node object as stack pane; is visited by visitor
+ * 
+ * @author Dylan 
+ *
+ */
+
+public class GraphNode extends StackPane implements GraphObject {
 	private Circle circle;
 	private static int NODE_ID = 0;
 
 	public GraphNode(Double x, Double y) {
-
 		
 		this.setLayoutX(x-GraphEditorViewImpl.NODE_RADIUS);
 		this.setLayoutY(y-GraphEditorViewImpl.NODE_RADIUS);
@@ -51,5 +59,9 @@ public class GraphNode extends StackPane {
 	}
 	public DoubleProperty centerYProperty() {
 		return circle.centerYProperty();
+	}
+	@Override
+	public void accept(GraphVisitor visitor) {
+		visitor.visitNode(this);
 	}
 }

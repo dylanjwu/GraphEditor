@@ -1,7 +1,7 @@
 package application.controller;
 
 import java.util.HashMap;
-
+import java.util.Iterator;
 import java.util.Map;
 
 import application.model.Graph;
@@ -9,12 +9,15 @@ import application.model.Vertex;
 import application.view.GraphEdge;
 import application.view.GraphEditorView;
 import application.view.GraphNode;
+import application.view.visitor.DFSVisitor;
+import application.view.visitor.GraphVisitor;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
- * 
+ * Central controller that is in charge of changing between different mode controllers, 
+ * running simulation, and holds view, model references
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -23,20 +26,17 @@ import javafx.util.Pair;
 public class MainController implements Controller {
 	
 	private ModeController currentMode;
-
 	private GraphEditorView view;
-
-	//UNDO/REDO: save state with commands (if added, then remove command is added, vice versa)
 	private Graph model; 
 
-	//UNDO/REDO: save state (copies) of nodeMap and edgeMap
 	private Map<GraphNode, Vertex> nodeMap;
 	private Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap;
-
+	
 	public MainController(GraphEditorView view, Graph model) {
 		this.nodeMap = new HashMap<>();
 		this.edgeMap = new HashMap<>();
 
+		/** opening mode is the add controller */
 		this.currentMode = new AddController(view, nodeMap, edgeMap, model);
 
 		this.view = view;
@@ -54,6 +54,7 @@ public class MainController implements Controller {
 		// TODO Auto-generated method stub
 	}
 
+	/** given lowercase string, change the mode (changed in Main file) */
 	@Override
 	public void changeMode(String mode) {
 		if (mode.equals("delete")) {
@@ -105,4 +106,27 @@ public class MainController implements Controller {
 		return currentMode;
 	}
 
+	/** Run the model's graph DFS iterator, should show all nodes highlighting (not yet fully functional)*/
+	@Override
+	public void simulateAlgorithm() throws InterruptedException {
+		
+		GraphVisitor visitor = new DFSVisitor();
+
+		/** Using model's DFS iterator (iterator pattern) */
+
+		for (Vertex vertex : model) {
+			if (nodeMap.containsValue(vertex)) {
+				for (Map.Entry<GraphNode, Vertex> entry : nodeMap.entrySet()) {
+					if (entry.getValue().equals(vertex)) {
+						
+						GraphNode node = entry.getKey();
+
+						node.accept(visitor);
+					}
+				}
+			}
+			/** must turn pause off for testing purposes */
+//			Thread.sleep(100);
+		}
+	}
 }

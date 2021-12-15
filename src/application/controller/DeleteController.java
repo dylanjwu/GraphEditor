@@ -17,7 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
- * 
+ * Mode controller implementation for deleting nodes and edges
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -25,10 +25,13 @@ import javafx.util.Pair;
 
 public class DeleteController extends AbstractModeController {
 	
-//	private boolean edgeSelected(Line edge) {
-//		return edge.getStroke().equals(Color.RED);
-//	}
-
+	/**
+	 * 
+	 * @param view
+	 * @param nodeMap
+	 * @param edgeMap
+	 * @param model
+	 */
 	public DeleteController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
@@ -36,17 +39,18 @@ public class DeleteController extends AbstractModeController {
 		this.edgeMap = edgeMap;
 		view.setModeController(this);
 
-
+		/** add its node handlers */
 		for (GraphNode node : nodeMap.keySet()) {
 			addNodeHandlers(node);
 		}
 
+		/** add its edge handlers */
 		for (GraphEdge edge : edgeMap.keySet()) {
 			addEdgeEventHandlers(edge, null, null);
 		}
 	}
 	
-	/** only to be used if node is removed from nodeMap as well */
+	/** Deletes node from the view and the model; only to be used if node is removed from nodeMap as well */
 	private void deleteNode(GraphNode node) {
 		model.removeVertex(nodeMap.get(node));
 		for (GraphEdge edge : edgeMap.keySet()) {
@@ -60,6 +64,7 @@ public class DeleteController extends AbstractModeController {
 	}
 
 
+	/** Adds handler to node such that if pressed, will delete itself and other highlighted nodes/edges if applicable (from controller maps, and view and model) */
 	@Override
 	public void addNodeHandlers(GraphNode node) {
 
@@ -68,7 +73,6 @@ public class DeleteController extends AbstractModeController {
 		node.setOnDragDropped(null);
 		node.setOnDragDetected(null);
 
-		/** SAVE STATE */
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -77,6 +81,7 @@ public class DeleteController extends AbstractModeController {
 
 				if (circle.isHighlighted()) {
 
+					/** run through iterator to find highlighted nodes */
 					Iterator<GraphNode> iterator = nodeMap.keySet().iterator();
 					
 					while (iterator.hasNext()) {
@@ -98,6 +103,8 @@ public class DeleteController extends AbstractModeController {
 		});
 	}
 
+
+	/** Add handler to edge such that it is removed from view and model and edgeMap*/
 	@Override
 	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
 

@@ -1,13 +1,13 @@
 package application.model;
 
 /**
- * 
+ * Driver class for testing the model
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
  */
 
-public class Main {
+public class Driver {
 
 	public static void main(String[] args) {
 		Graph graph = new DefaultGraph();

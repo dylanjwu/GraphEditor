@@ -1,10 +1,15 @@
 package application.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * 
+ * Basic, default graph implementation; wrapped by WeightedGraph
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -47,7 +52,7 @@ public class DefaultGraph implements Graph {
 
 	@Override
 	public List<Vertex> getVertices() {
-		return null;
+		return adjList;
 	}
 
 	@Override
@@ -60,49 +65,52 @@ public class DefaultGraph implements Graph {
 		return "DefaultGraph [adjList=" + adjList + "]";
 	}
 
-}
+	@Override
+	public Iterator<Vertex> iterator() {
+		return new DFSIterator(adjList);
+	}
 
-class WeightedGraph implements Graph {
+	private class DFSIterator implements Iterator<Vertex> {
+		private Set<Vertex> visited;
+		private List<Vertex> adjList;
+		
+		private Stack<Vertex> stack;
+		
+		public DFSIterator(List<Vertex> adjList) {
+			this.visited = new HashSet<>();
+			this.adjList = adjList;
+			this.stack = new Stack<>();
+			
+			/** perform dfs immediately, and by order to the stack */
+			for (Vertex w : adjList) {
+				if (!visited.contains(w)) {
+					this.stack.push(w);
+					boolean nothingAdded = false;
+					while (!nothingAdded) {
+						Vertex u = stack.peek();
+						nothingAdded = true;
+						for (Vertex v : u.edges()) {
+							if (!visited.contains(v)) {
+								stack.push(v);
+								nothingAdded = false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !stack.isEmpty();
+		}
+
+		@Override
+		public Vertex next() {
+			return stack.pop();
+		}
+		
+	}
 	
-	private Graph graph;
-	public WeightedGraph(Graph graph) {
-		this.graph = graph;
-	}
-
-	@Override
-	public void addVertex(Vertex v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeVertex(Vertex v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void addEdge(Vertex u, Vertex v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeEdge(Vertex u, Vertex v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<Vertex> getVertices() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }

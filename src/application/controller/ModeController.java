@@ -7,7 +7,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 /**
- * 
+ * Mode controller interface for Delete/Add/Move controllers
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  

@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 
+ * Basic, default vertex implementation; wrapped by WeightedGraphVertex
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  

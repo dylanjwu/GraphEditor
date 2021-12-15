@@ -15,7 +15,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
- * 
+ * Controller for moving nodes and vertices aroung the screen
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -27,6 +27,13 @@ public class MoveController extends AbstractModeController {
 	private double orgSceneX, orgSceneY;
 	private boolean dragged;
 
+	/**
+	 * 
+	 * @param view
+	 * @param nodeMap
+	 * @param edgeMap
+	 * @param model
+	 */
 	public MoveController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.view = view;
 		this.model = model;
@@ -36,10 +43,12 @@ public class MoveController extends AbstractModeController {
 
 		view.setModeController(this);
 
+		/** add its node handlers */
 		for (GraphNode node : nodeMap.keySet()) {
 			addNodeHandlers(node);
 		}
 
+		/** add its edge handlers */
 		for (GraphEdge edge : edgeMap.keySet()) {
 			addEdgeEventHandlers(edge, null, null);
 		}
@@ -47,6 +56,10 @@ public class MoveController extends AbstractModeController {
 	}
 
 
+	/**
+	 * Set handlers on nodes for when they are dragged, drag/dropped, released
+	 * Move them when dragged
+	 */
 	@Override
 	public void addNodeHandlers(GraphNode node) {
 
@@ -54,7 +67,6 @@ public class MoveController extends AbstractModeController {
 		node.setOnDragDetected(null);
 		node.setOnDragDropped(null);
 
-		/** SAVE STATE */
 	    node.setOnMousePressed((t) -> {
 		
 	      orgSceneX = t.getSceneX();
@@ -67,7 +79,6 @@ public class MoveController extends AbstractModeController {
 	    });
 
 
-	    /** SAVE STATE */
 	    node.setOnMouseDragged((t) -> {
 
 	      dragged = true;
@@ -86,7 +97,7 @@ public class MoveController extends AbstractModeController {
 	      t.consume();
 	    });	
 
-	    /** SAVE STATE */
+	    
 	    node.setOnMouseReleased(t -> {
 	    	
 	    	if (dragged == false) {
@@ -102,10 +113,13 @@ public class MoveController extends AbstractModeController {
 	    });
 	}
 
+	/**
+	 * Add handler that highlights edge when it is pressed; unselect the rest of the graph if applicable
+	 */
 	@Override
 	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
 
-		/** SAVE STATE */
+		
 		edge.setOnMousePressed(e -> {
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());

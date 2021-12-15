@@ -27,6 +27,7 @@ public abstract class AbstractModeController implements ModeController {
 	protected Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap;
 	protected Pair<Double, Double> selectionStart;
 
+	/** helper function for unselecting the edges and nodes of the graph */
 	@Override
 	public void unselectGraph() {
 		/** un-highlight all incident nodes */
@@ -44,6 +45,9 @@ public abstract class AbstractModeController implements ModeController {
 		}
 	}
 	
+	/**
+	 * Unselect the selection of the graph by default
+	 */
 	@Override
 	public void addCanvasPressHandler(Node node) {
 		node.setOnMousePressed(e -> {
@@ -51,6 +55,13 @@ public abstract class AbstractModeController implements ModeController {
 		});
 	}
 	
+	/**
+	 * Select/highlight nodes and edges
+	 * @param startX
+	 * @param startY
+	 * @param width
+	 * @param height
+	 */
 	private void selectSubgraph(Double startX, Double startY, Double width, Double height) {
 		
 			/** highlight all incident nodes */
@@ -77,10 +88,13 @@ public abstract class AbstractModeController implements ModeController {
 			}
 	}
 
+	/**
+	 * Create rectangular selector for selecting graphs and nodes
+	 */
 	@Override
 	public void addCanvasDragHandler(Node node) {
 
-		/** SAVE STATE */
+		/** initialize starting coordinates */
 		node.setOnDragDetected(e -> selectionStart = new Pair<>(e.getX(), e.getY()));
 		
 		node.setOnMouseDragged(new EventHandler<MouseEvent>() {
@@ -97,6 +111,7 @@ public abstract class AbstractModeController implements ModeController {
 				Double width = Math.abs(x-selectionStart.getKey());
 				Double height = Math.abs(y-selectionStart.getValue());
 
+				/** inversion logic */
 				if (x < selectionStart.getKey() && y < selectionStart.getValue()) {
 					startX = x;
 					startY = y;
@@ -124,7 +139,7 @@ public abstract class AbstractModeController implements ModeController {
 			
 		});
 
-		/** SAVE STATE */
+		/** selection goes when mouse is released */
 		node.setOnMouseReleased(e -> {
 				view.quitSelection(); 
 				selectionStart = null;

@@ -19,12 +19,11 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 /**
- * 
+ * View implementation class -- manages the visuals of nodes and edges; adds/deletes/moves them around
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
  */
-//UNDO/REDO: store state of this.getChildren()
 
 public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	public static final int NODE_RADIUS = 15;
@@ -84,22 +83,12 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 
 	@Override
 	public void zoomIn() {
-//			scene.setOnZoomStarted(evt -> System.out.println("ZOOM STARTED"));
-////		scene.setOnZoom(evt -> {
-////			System.out.println("ZOOMING");
-////			double zoomFactor = 1.2;
-////			root.setScaleX(root.getScaleX() * zoomFactor);
-////            root.setScaleY(root.getScaleY() * zoomFactor);
-////		});
-////		
-////		scene.setOnZoomFinished(evt -> System.out.println("ZOOM FINISHED"));
-//
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void zoomOut() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -115,36 +104,14 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 		if (modeController == null) return;
 		GraphNode newNode = new GraphNode(x, y);
 		modeController.addNodeHandlers(newNode);
-
-		// register this node with the controller, add handler
-//		StackPane stackPane = new StackPane();
-//		Label label = new Label("Hi");
-//		newNode.radiusProperty().bind(label.widthProperty());
-//		stackPane.getChildren().addAll(newNode, label);
-		
 		this.getChildren().add(newNode);
 	}
 	
 	@Override
 	public void addEdge(GraphNode src, GraphNode dst) {
-//		Line edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
 		GraphEdge edge = new GraphEdge(src, dst);
 		
 		modeController.addEdgeEventHandlers(edge, src, dst);
-		//connect the edge to the src and dst nodes so that when one of them moves, the edge moves accordingly
-//		System.out.println("src x: " + src.centerXProperty());
-//
-//		System.out.println("dst x: " + dst.centerXProperty());
-//
-//		edge.startXProperty().bind(src.centerXProperty());
-//		edge.startYProperty().bind(src.centerYProperty());
-//		edge.endXProperty().bind(dst.centerXProperty());
-//		edge.endYProperty().bind(dst.centerYProperty());
-//
-//	    edge.setStrokeWidth(3);
-//	    edge.setStroke(Color.BLACK);
-//	    edge.setVisible(true);
-//	    
 		this.getChildren().add(edge);
 
 	    src.toFront();
@@ -192,8 +159,6 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 		if (node.isHighlighted() && nextX-NODE_RADIUS > 0 && nextX+NODE_RADIUS < DIMENSION 
 				&& nextY-NODE_RADIUS > 0 && nextY+NODE_RADIUS < DIMENSION) {
 			node.movePosition(nextX, nextY);
-//		  node.setCenterX(nextX);
-//		  node.setCenterY(nextY);
 		}
 	}
 	
