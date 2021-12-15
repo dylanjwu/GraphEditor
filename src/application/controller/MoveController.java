@@ -5,7 +5,9 @@ import java.util.Map;
 
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,18 +15,26 @@ import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
- * 
+ * Controller for moving nodes and vertices aroung the screen
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
  */
+
 
 public class MoveController extends AbstractModeController {
 
 	private double orgSceneX, orgSceneY;
 	private boolean dragged;
 
-	public MoveController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
+	/**
+	 * 
+	 * @param view
+	 * @param nodeMap
+	 * @param edgeMap
+	 * @param model
+	 */
+	public MoveController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.view = view;
 		this.model = model;
 		this.nodeMap = nodeMap;
@@ -33,38 +43,42 @@ public class MoveController extends AbstractModeController {
 
 		view.setModeController(this);
 
-		for (Circle node : nodeMap.keySet()) {
+		/** add its node handlers */
+		for (GraphNode node : nodeMap.keySet()) {
 			addNodeHandlers(node);
 		}
 
-		for (Line edge : edgeMap.keySet()) {
+		/** add its edge handlers */
+		for (GraphEdge edge : edgeMap.keySet()) {
 			addEdgeEventHandlers(edge, null, null);
 		}
 	
 	}
 
 
+	/**
+	 * Set handlers on nodes for when they are dragged, drag/dropped, released
+	 * Move them when dragged
+	 */
 	@Override
-	public void addNodeHandlers(Circle node) {
+	public void addNodeHandlers(GraphNode node) {
 
 		node.setOnMouseDragged(null);
 		node.setOnDragDetected(null);
 		node.setOnDragDropped(null);
-		
+
 	    node.setOnMousePressed((t) -> {
 		
-	    	/** SAVE STATE */
 	      orgSceneX = t.getSceneX();
 	      orgSceneY = t.getSceneY();
 
-	      Circle c = (Circle) (t.getSource());
-	      view.highlightNode(c);
+	      GraphNode c = (GraphNode) (t.getSource());
+	      view.highlightNode(c); 
 	      c.toFront();
 	      t.consume();
 	    });
 
 
-	    /** SAVE STATE */
 	    node.setOnMouseDragged((t) -> {
 
 	      dragged = true;
@@ -73,7 +87,7 @@ public class MoveController extends AbstractModeController {
 	      double offsetY = t.getSceneY() - orgSceneY;
 
 
-	      for (Circle otherNode : nodeMap.keySet()) {
+	      for (GraphNode otherNode : nodeMap.keySet()) {
 	    	  view.moveNode(otherNode, offsetX, offsetY);
 	      }
 
@@ -82,13 +96,14 @@ public class MoveController extends AbstractModeController {
 
 	      t.consume();
 	    });	
+
 	    
 	    node.setOnMouseReleased(t -> {
 	    	
 	    	if (dragged == false) {
 
 			  unselectGraph();
-			  view.highlightNode((Circle)t.getSource());
+			  view.highlightNode((GraphNode)t.getSource());
 			  orgSceneX = t.getSceneX();
 			  orgSceneY = t.getSceneY();
 ;
@@ -98,10 +113,14 @@ public class MoveController extends AbstractModeController {
 	    });
 	}
 
+	/**
+	 * Add handler that highlights edge when it is pressed; unselect the rest of the graph if applicable
+	 */
 	@Override
-	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
+
+		
 		edge.setOnMousePressed(e -> {
-			/** SAVE STATE */
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();

@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 
+ * Basic, default vertex implementation; wrapped by WeightedGraphVertex
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -68,7 +68,7 @@ public class DefaultVertex implements Vertex{
 		if (getClass() != obj.getClass())
 			return false;
 		Vertex other = (Vertex) obj;
-		return Objects.equals(edges, other.edges()) && id == other.getId();
+		return edges.equals(other.edges()) && id == other.getId();
 	}
 
 }

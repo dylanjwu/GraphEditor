@@ -2,32 +2,36 @@ package application.view;
 
 import application.controller.ModeController;
 import application.model.Graph;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 /**
- * 
+ * View implementation class -- manages the visuals of nodes and edges; adds/deletes/moves them around
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
  */
 
 public class GraphEditorViewImpl extends Pane implements GraphEditorView {
-	static final int NODE_RADIUS = 15;
+	public static final int NODE_RADIUS = 15;
 
 	/** if used, should segregate the interface, so that mutations are not possible here */
 	private Graph model; // use this to iterate through the nodes and edges 
 	
-	private Circle currentSourceNode;
+	private GraphNode currentSourceNode;
 	private ModeController modeController;
 	private static final int DIMENSION = 550;
 	
@@ -58,12 +62,12 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	}
 	
 	@Override
-	public Circle getCurrentSourceNode() {
+	public GraphNode getCurrentSourceNode() {
 		return currentSourceNode;
 	}
 
 	@Override
-	public void setCurrentSourceNode(Circle node) {
+	public void setCurrentSourceNode(GraphNode node) {
 		currentSourceNode = node;
 	}
 
@@ -73,28 +77,18 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	}
 
 	@Override
-	public void removeEdge(Line edge) {
+	public void removeEdge(GraphEdge edge) {
 		this.getChildren().remove(edge);
 	}
 
 	@Override
 	public void zoomIn() {
-//			scene.setOnZoomStarted(evt -> System.out.println("ZOOM STARTED"));
-////		scene.setOnZoom(evt -> {
-////			System.out.println("ZOOMING");
-////			double zoomFactor = 1.2;
-////			root.setScaleX(root.getScaleX() * zoomFactor);
-////            root.setScaleY(root.getScaleY() * zoomFactor);
-////		});
-////		
-////		scene.setOnZoomFinished(evt -> System.out.println("ZOOM FINISHED"));
-//
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void zoomOut() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -108,41 +102,16 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	@Override
 	public void addNode(double x, double y) {
 		if (modeController == null) return;
-		Circle newNode = new Circle(x, y, NODE_RADIUS);
+		GraphNode newNode = new GraphNode(x, y);
 		modeController.addNodeHandlers(newNode);
-		newNode.setStroke(Color.RED);
-		newNode.setFill(Color.WHITE);
-
-		// register this node with the controller, add handler
-//		StackPane stackPane = new StackPane();
-//		Label label = new Label("Hi");
-//		newNode.radiusProperty().bind(label.widthProperty());
-//		stackPane.getChildren().addAll(newNode, label);
-		
 		this.getChildren().add(newNode);
 	}
 	
 	@Override
-	public void addEdge(Circle src, Circle dst) {
-		Line edge = new Line(src.getCenterX(), src.getCenterY(), dst.getCenterX(), dst.getCenterY());
-		System.out.println(edge);
+	public void addEdge(GraphNode src, GraphNode dst) {
+		GraphEdge edge = new GraphEdge(src, dst);
+		
 		modeController.addEdgeEventHandlers(edge, src, dst);
-		//connect the edge to the src and dst nodes so that when one of them moves, the edge moves accordingly
-		System.out.println("src x: " + src.centerXProperty());
-
-		System.out.println("dst x: " + dst.centerXProperty());
-
-		edge.startXProperty().bind(src.centerXProperty());
-		edge.startYProperty().bind(src.centerYProperty());
-		edge.endXProperty().bind(dst.centerXProperty());
-		edge.endYProperty().bind(dst.centerYProperty());
-
-	    edge.setStrokeWidth(3);
-//	    edge.setStrokeLineCap(StrokeLineCap.BUTT);
-//	    edge.getStrokeDashArray().setAll(1.0, 4.0);
-	    edge.setStroke(Color.BLACK);
-	    edge.setVisible(true);
-	    
 		this.getChildren().add(edge);
 
 	    src.toFront();
@@ -152,13 +121,13 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 
 	@Override
 	public void highlightNode(Node node) {
-		if (node instanceof Circle) ((Circle)node).setStroke(Color.RED);
+		if (node instanceof GraphNode) ((GraphNode)node).changeColor(Color.RED);
 		if (node instanceof Line) ((Line)node).setStroke(Color.RED);
 	}
 	
 	@Override
 	public void unhighlightNode(Node node) {
-		if (node instanceof Circle) ((Circle)node).setStroke(Color.BLACK);
+		if (node instanceof GraphNode) ((GraphNode)node).changeColor(Color.BLACK);
 		if (node instanceof Line) ((Line)node).setStroke(Color.BLACK);
 	}
 
@@ -183,17 +152,14 @@ public class GraphEditorViewImpl extends Pane implements GraphEditorView {
 	}
 
 	@Override
-	public void moveNode(Circle node, Double offsetX, Double offsetY) {
-		double nextX = node.getCenterX() + offsetX;
-		double nextY = node.getCenterY() + offsetY;
+	public void moveNode(GraphNode node, Double offsetX, Double offsetY) {
+		double nextX = node.getLayoutX() + offsetX;
+		double nextY = node.getLayoutY() + offsetY;
 
-		if (node.getStroke().equals(Color.RED) && nextX-NODE_RADIUS > 0 && nextX+NODE_RADIUS < DIMENSION 
+		if (node.isHighlighted() && nextX-NODE_RADIUS > 0 && nextX+NODE_RADIUS < DIMENSION 
 				&& nextY-NODE_RADIUS > 0 && nextY+NODE_RADIUS < DIMENSION) {
-		  node.setCenterX(nextX);
-		  node.setCenterY(nextY);
+			node.movePosition(nextX, nextY);
 		}
 	}
 	
 }
-
-

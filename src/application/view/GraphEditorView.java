@@ -7,6 +7,8 @@ import javafx.scene.shape.Line;
 
 /**
  * 
+ * View interface for the canvas
+ * 
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
  *  
@@ -16,7 +18,7 @@ public interface GraphEditorView {
 
 	void removeGroup(Node node);
 
-	void removeEdge(Line edge);
+	void removeEdge(GraphEdge edge);
 
 	void zoomIn();
 
@@ -26,11 +28,11 @@ public interface GraphEditorView {
 
 	void addNode(double x, double y);
 
-	Circle getCurrentSourceNode();
+	GraphNode getCurrentSourceNode();
 
-	void addEdge(Circle src, Circle dst);
+	void addEdge(GraphNode src, GraphNode dst);
 
-	void setCurrentSourceNode(Circle node);
+	void setCurrentSourceNode(GraphNode node);
 
 	void setModeController(ModeController newController);
 
@@ -42,6 +44,6 @@ public interface GraphEditorView {
 
 	void unhighlightNode(Node node);
 	
-	void moveNode(Circle node, Double offsetX, Double offsetY);
+	void moveNode(GraphNode node, Double offsetX, Double offsetY);
 
 }

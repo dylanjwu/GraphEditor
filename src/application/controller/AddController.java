@@ -5,7 +5,9 @@ import java.util.Map;
 import application.model.DefaultVertex;
 import application.model.Graph;
 import application.model.Vertex;
+import application.view.GraphEdge;
 import application.view.GraphEditorView;
+import application.view.GraphNode;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.ClipboardContent;
@@ -18,6 +20,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
 /**
+ * Mode controller for adding single nodes, creating edges between nodes; can still select groups of nodes/edges
  * 
  * @author Dylan Wu
  * CS5010 v1 Fall 2021 - Final Project
@@ -25,19 +28,29 @@ import javafx.util.Pair;
  */
 
 public class AddController extends AbstractModeController {
-
-	public AddController(GraphEditorView view, Map<Circle, Vertex> nodeMap, Map<Line, Pair<Circle, Circle>> edgeMap, Graph model) {
+	
+	/**
+	 * @param view
+	 * @param nodeMap
+	 * @param edgeMap
+	 * @param model
+	 */
+	public AddController(GraphEditorView view, Map<GraphNode, Vertex> nodeMap, Map<GraphEdge, Pair<GraphNode, GraphNode>> edgeMap, Graph model) {
 		this.model = model;
 		this.view = view;
 		this.nodeMap = nodeMap;
 		this.edgeMap = edgeMap;
 		view.setModeController(this);
 		
-		for (Circle node : nodeMap.keySet())
+		/** add node handlers to each node */
+		for (GraphNode node : nodeMap.keySet())
 			addNodeHandlers(node);
 
 	}
 	
+	/**
+	 * Create node if empty canvas is pressed; also unselect the selected subgraph if it is selected
+	 */
 	@Override
 	public void addCanvasPressHandler(Node node) {
 		node.setOnMousePressed(e -> {
@@ -47,8 +60,9 @@ public class AddController extends AbstractModeController {
 	}
 
 	
+	/** if node does not exist, creates it; highlight existing node if pressed; creates edge/drag drop function */
 	@Override
-	public void addNodeHandlers(Circle node) {  
+	public void addNodeHandlers(GraphNode node) {  
 		//add node to new vertex in nodeMap and model (model)
 		
 		if (nodeMap.get(node) == null) { /** add vertex to model if node is newly created (in view)*/
@@ -61,12 +75,15 @@ public class AddController extends AbstractModeController {
 		}
 
 		node.setOnMouseDragged(null); //necessary if coming from move controller
+
 		node.setOnMousePressed(e -> {
 			unselectGraph();
 			view.highlightNode((Node)e.getSource());
 			e.consume();
 		});
 		
+		/** when dropped, find the source and dest, create new edge between them */
+		// Resource used: https://docs.oracle.com/javafx/2/drag_drop/jfxpub-drag_drop.htm
 		node.setOnDragDropped(
 			new EventHandler<DragEvent>() {
 
@@ -76,8 +93,8 @@ public class AddController extends AbstractModeController {
 						event.setDropCompleted(true);
 
 						if (view.getCurrentSourceNode() != null) {
-							Circle source = (Circle)view.getCurrentSourceNode();
-							Circle dest = (Circle)event.getSource();
+							GraphNode source = (GraphNode)view.getCurrentSourceNode();
+							GraphNode dest = (GraphNode)event.getSource();
 
 							if (!edgeExists(source, dest)) {
 						
@@ -93,6 +110,7 @@ public class AddController extends AbstractModeController {
 				}
 		});
 	
+		/** if dragged over, accept the transfer and consume event*/
 		node.setOnDragOver(
 			new EventHandler<DragEvent>() {
 				public void handle(DragEvent event) {
@@ -103,28 +121,32 @@ public class AddController extends AbstractModeController {
 				}
 		});
 
+		/** when drag detected; initialize and start drag and drop event */
        node.setOnDragDetected((MouseEvent event) -> {
 
-    	   	view.setCurrentSourceNode((Circle)event.getSource()); /** set the node to be the source node */
+    	   	view.setCurrentSourceNode((GraphNode)event.getSource()); /** set the node to be the source node */
 
             Dragboard db = ((Node) event.getSource()).startDragAndDrop(TransferMode.COPY_OR_MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString( "");
+            content.putString("");
             db.setContent(content);
         });
 	}
 	
-	private boolean edgeExists(Circle source, Circle dest) {
+	/** returns true if there is an edge in edgeMap between source and dest nodes */
+	private boolean edgeExists(GraphNode source, GraphNode dest) {
 
-		for (Pair<Circle, Circle> pair : edgeMap.values()) {
+		for (Pair<GraphNode, GraphNode> pair : edgeMap.values()) {
 			if (pair.getKey().equals(source) && pair.getValue().equals(dest))
 				return true;
 		}
 		return false;
 	}
 
+	/** Add handlers to edge such that if edge does not exist; we add it the model and edgeMap; 
+	 * and, if pressed, we highlight it and unselect any selected subgraph (as we did with node) */
 	@Override
-	public void addEdgeEventHandlers(Line edge, Circle source, Circle dest) {
+	public void addEdgeEventHandlers(GraphEdge edge, GraphNode source, GraphNode dest) {
 
 		if (!edgeExists(source, dest)) {
 			// Add edge to the source vertex in model (SHOULD CHANGE IN nodeMap too)
@@ -142,3 +164,5 @@ public class AddController extends AbstractModeController {
 	}
 
 }
+
+
